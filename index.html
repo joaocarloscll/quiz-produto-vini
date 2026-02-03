@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://formsubmit.co https://api.netlify.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <title>Quiz - Qual produto é ideal para você? | Vinicius Figueiredo</title>
     <style>
         * {
@@ -20,6 +19,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -107,7 +107,8 @@
             border-radius: 12px;
             padding: 16px 20px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+            touch-action: manipulation;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -121,6 +122,10 @@
 
         .option.selected {
             border-color: #667eea;
+            background: #e6effb;
+        }
+
+        .option.selected:hover {
             background: #e6effb;
         }
 
@@ -176,6 +181,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            touch-action: manipulation;
         }
 
         .btn-next {
@@ -183,7 +189,7 @@
             color: white;
         }
 
-        .btn-next:hover {
+        .btn-next:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
@@ -295,21 +301,63 @@
             display: none;
         }
 
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+
+            .result-box {
+                padding: 20px;
+            }
+        }
+
         @media (max-width: 600px) {
             .container {
-                padding: 25px;
+                padding: 20px;
             }
 
             h1 {
-                font-size: 24px;
+                font-size: 22px;
             }
 
             .question-text {
-                font-size: 18px;
+                font-size: 17px;
+            }
+
+            .option {
+                padding: 14px 16px;
+            }
+
+            .input-field {
+                font-size: 16px;
+            }
+
+            .buttons {
+                flex-direction: column-reverse;
+                gap: 10px;
             }
 
             .result-title {
-                font-size: 26px;
+                font-size: 24px;
+            }
+
+            .result-icon {
+                font-size: 48px;
+            }
+
+            .price {
+                font-size: 24px;
+            }
+
+            .result-box {
+                padding: 18px;
+            }
+
+            .cta-button {
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding: 16px 20px;
             }
         }
     </style>
@@ -329,6 +377,7 @@
                 <div class="error-message" id="email-error">Por favor, insira um e-mail válido.</div>
                 
                 <input type="tel" id="phone" class="input-field" placeholder="WhatsApp (opcional)" maxlength="20">
+                <div class="error-message" id="phone-error">Por favor, insira um número de telefone válido.</div>
             </div>
 
             <div class="buttons">
@@ -375,8 +424,6 @@
             const temp = document.createElement('div');
             temp.textContent = input;
             return temp.innerHTML
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#x27;')
                 .replace(/\//g, '&#x2F;');
@@ -410,17 +457,11 @@
         /**
          * Cria elemento de forma segura
          */
-        function createSafeElement(tag, attributes = {}, textContent = '') {
+        function createSafeElement(tag, attributes = {}) {
             const element = document.createElement(tag);
-            
             Object.keys(attributes).forEach(key => {
-                if (key === 'textContent') {
-                    element.textContent = textContent;
-                } else {
-                    element.setAttribute(key, attributes[key]);
-                }
+                element.setAttribute(key, attributes[key]);
             });
-            
             return element;
         }
 
@@ -791,6 +832,7 @@
             // Limpar mensagens de erro
             document.getElementById('name-error').style.display = 'none';
             document.getElementById('email-error').style.display = 'none';
+            document.getElementById('phone-error').style.display = 'none';
 
             const nameInput = document.getElementById('name').value;
             const emailInput = document.getElementById('email').value;
@@ -810,7 +852,7 @@
 
             // Validar telefone (se preenchido)
             if (phoneInput && !validatePhone(phoneInput)) {
-                alert('Por favor, insira um número de telefone válido.');
+                document.getElementById('phone-error').style.display = 'block';
                 return;
             }
 
@@ -1003,11 +1045,6 @@
             });
 
             showResult(winner);
-
-            // Log seguro (não expõe dados sensíveis)
-            console.log('Quiz completado');
-            console.log('Produto recomendado:', winner);
-            console.log('Pontuação:', scores);
         }
 
         /**
