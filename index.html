@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://formsubmit.co https://api.netlify.com;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <title>Quiz - Qual produto é ideal para você? | Vinicius Figueiredo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #718096;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            color: #2d3748;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e6effb;
+        }
+
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 16px;
+            color: #2d3748;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-back {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-back:hover {
+            background: #cbd5e0;
+        }
+
+        .result-container {
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 32px;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .result-subtitle {
+            font-size: 18px;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        .result-box {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .result-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .result-box ul {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .result-box li {
+            color: #4a5568;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .result-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-weight: bold;
+        }
+
+        .price {
+            font-size: 28px;
+            color: #2d3748;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .note {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .result-title {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- TELA INICIAL -->
+        <div id="welcome-screen">
+            <h1>🎯 Descubra qual produto é ideal para você!</h1>
+            <p class="subtitle">Responda este quiz rápido (3-5 minutos) e receba uma recomendação personalizada baseada no seu perfil e objetivos.</p>
+            
+            <div style="margin-top: 30px;">
+                <input type="text" id="name" class="input-field" placeholder="Seu nome completo *" required maxlength="100">
+                <div class="error-message" id="name-error">Por favor, insira um nome válido (apenas letras e espaços).</div>
+                
+                <input type="email" id="email" class="input-field" placeholder="Seu e-mail *" required maxlength="100">
+                <div class="error-message" id="email-error">Por favor, insira um e-mail válido.</div>
+                
+                <input type="tel" id="phone" class="input-field" placeholder="WhatsApp (opcional)" maxlength="20">
+            </div>
+
+            <div class="buttons">
+                <button class="btn-next" onclick="startQuiz()">Começar Quiz →</button>
+            </div>
+        </div>
+
+        <!-- TELA DO QUIZ -->
+        <div id="quiz-screen" class="hidden">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number" id="question-number"></div>
+                <div class="question-text" id="question-text"></div>
+                <div class="options" id="options"></div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn-back" id="btn-back" onclick="previousQuestion()">← Voltar</button>
+                <button class="btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
+            </div>
+        </div>
+
+        <!-- TELA DE RESULTADO -->
+        <div id="result-screen" class="hidden">
+            <div class="result-container" id="result-content"></div>
+        </div>
+    </div>
+
+    <script>
+        'use strict';
+
+        // ========== FUNÇÕES DE SEGURANÇA ==========
+        
+        /**
+         * Sanitiza string para prevenir XSS
+         * Remove tags HTML e caracteres perigosos
+         */
+        function sanitizeInput(input) {
+            if (typeof input !== 'string') return '';
+            
+            const temp = document.createElement('div');
+            temp.textContent = input;
+            return temp.innerHTML
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;')
+                .replace(/\//g, '&#x2F;');
+        }
+
+        /**
+         * Valida nome (apenas letras, espaços, acentos)
+         */
+        function validateName(name) {
+            const regex = /^[a-zA-ZÀ-ÿ\s]{2,100}$/;
+            return regex.test(name.trim());
+        }
+
+        /**
+         * Valida email
+         */
+        function validateEmail(email) {
+            const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            return regex.test(email.trim()) && email.length <= 100;
+        }
+
+        /**
+         * Valida telefone (formato brasileiro)
+         */
+        function validatePhone(phone) {
+            if (!phone) return true; // Opcional
+            const regex = /^[\d\s\(\)\-\+]{10,20}$/;
+            return regex.test(phone.trim());
+        }
+
+        /**
+         * Cria elemento de forma segura
+         */
+        function createSafeElement(tag, attributes = {}, textContent = '') {
+            const element = document.createElement(tag);
+            
+            Object.keys(attributes).forEach(key => {
+                if (key === 'textContent') {
+                    element.textContent = textContent;
+                } else {
+                    element.setAttribute(key, attributes[key]);
+                }
+            });
+            
+            return element;
+        }
+
+        // ========== DADOS DO USUÁRIO ==========
+        let userData = {
+            name: '',
+            email: '',
+            phone: ''
+        };
+
+        // RESPOSTAS
+        let answers = [];
+        let currentQuestion = 0;
+
+        // PONTUAÇÃO
+        let scores = {
+            ppci: 0,
+            avcb: 0,
+            escritorio: 0,
+            mentoria: 0
+        };
+
+        // PERGUNTAS
+        const questions = [
+            {
+                id: 1,
+                text: "Qual é a sua situação profissional atual?",
+                type: "single",
+                options: [
+                    "Estudante de engenharia/arquitetura",
+                    "CLT em empresa de engenharia/construção",
+                    "CLT em outra área (fora da engenharia)",
+                    "Autônomo/PJ prestando serviços de engenharia",
+                    "Tenho meu próprio escritório de projetos",
+                    "Desempregado/em transição"
+                ]
+            },
+            {
+                id: 2,
+                text: "Há quanto tempo você atua (ou pretende atuar) na área?",
+                type: "single",
+                options: [
+                    "Ainda estou estudando",
+                    "Menos de 1 ano de formado",
+                    "1 a 3 anos de experiência",
+                    "3 a 5 anos de experiência",
+                    "Mais de 5 anos de experiência"
+                ]
+            },
+            {
+                id: 3,
+                text: "Você já presta serviços de engenharia por fora?",
+                type: "single",
+                options: [
+                    "Não, nunca prestei",
+                    "Sim, ocasionalmente (bicos)",
+                    "Sim, regularmente como renda extra",
+                    "Sim, é minha principal fonte de renda",
+                    "Não, mas quero começar"
+                ]
+            },
+            {
+                id: 4,
+                text: "Qual é o seu nível de conhecimento em PPCI?",
+                type: "single",
+                options: [
+                    "Nenhum - nunca estudei/trabalhei com isso",
+                    "Básico - vi na faculdade mas nunca apliquei",
+                    "Intermediário - já fiz alguns projetos com ajuda",
+                    "Avançado - faço projetos regularmente",
+                    "Especialista - domino completamente"
+                ],
+                scoring: {
+                    0: { ppci: 3, avcb: 2 },
+                    1: { ppci: 3, avcb: 2 },
+                    2: { ppci: 2, avcb: 2 }
+                }
+            },
+            {
+                id: 5,
+                text: "Você já fez projetos de AVCB/CLCB ou laudos técnicos?",
+                type: "single",
+                options: [
+                    "Não sei nem o que é isso",
+                    "Sei o que é, mas nunca fiz",
+                    "Já fiz alguns, mas com muita dificuldade",
+                    "Faço regularmente",
+                    "Prefiro focar em outros serviços"
+                ],
+                scoring: {
+                    0: { avcb: 3, ppci: 1 },
+                    1: { avcb: 3, ppci: 1 },
+                    2: { avcb: 2, escritorio: 1 }
+                }
+            },
+            {
+                id: 6,
+                text: "Quais serviços você oferece ou gostaria de oferecer? (pode marcar vários)",
+                type: "multiple",
+                options: [
+                    "Projetos de PPCI (hidrantes, alarme)",
+                    "AVCB/CLCB e regularizações",
+                    "Laudos técnicos",
+                    "Projetos estruturais",
+                    "Projetos arquitetônicos",
+                    "Gerenciamento de obras",
+                    "Ainda não sei, preciso descobrir",
+                    "Outros serviços de engenharia"
+                ]
+            },
+            {
+                id: 7,
+                text: "Qual é o seu principal objetivo nos próximos 3-6 meses?",
+                type: "single",
+                options: [
+                    "Aprender uma nova habilidade técnica lucrativa",
+                    "Começar a prestar serviços e fazer renda extra",
+                    "Abrir meu próprio escritório/CNPJ",
+                    "Organizar e profissionalizar meu escritório",
+                    "Aumentar o faturamento do negócio atual",
+                    "Sair do CLT e viver como PJ/empreendedor"
+                ],
+                scoring: {
+                    0: { ppci: 3, avcb: 2 },
+                    1: { avcb: 3, escritorio: 1 },
+                    2: { escritorio: 3, mentoria: 2 },
+                    3: { escritorio: 3, mentoria: 1 },
+                    4: { escritorio: 3, avcb: 2 },
+                    5: { mentoria: 2, escritorio: 2 }
+                }
+            },
+            {
+                id: 8,
+                text: "Quais dessas situações te incomodam hoje? (até 3 opções)",
+                type: "multiple",
+                max: 3,
+                options: [
+                    "Não sei fazer projetos técnicos de qualidade",
+                    "Não consigo captar clientes",
+                    "Faturamento instável (meses bons e ruins)",
+                    "Não sei quanto cobrar pelos serviços",
+                    "Desorganização operacional",
+                    "Falta de direcionamento estratégico"
+                ],
+                scoring: {
+                    0: { ppci: 3, mentoria: 2 },
+                    1: { escritorio: 3, avcb: 2, mentoria: 2 },
+                    2: { avcb: 3, escritorio: 2, mentoria: 2 },
+                    3: { escritorio: 3, mentoria: 1 },
+                    4: { escritorio: 3, mentoria: 1 },
+                    5: { mentoria: 3, escritorio: 1 }
+                }
+            },
+            {
+                id: 9,
+                text: "Quanto você gostaria de faturar mensalmente?",
+                type: "single",
+                options: [
+                    "R$ 2.000 a R$ 5.000 (renda extra)",
+                    "R$ 5.000 a R$ 10.000 (inicial)",
+                    "R$ 10.000 a R$ 20.000 (principal)",
+                    "R$ 20.000 a R$ 30.000 (consolidado)",
+                    "Acima de R$ 30.000 (expansão)",
+                    "Ainda não pensei nisso"
+                ],
+                scoring: {
+                    0: { avcb: 3, ppci: 1 },
+                    1: { avcb: 2, escritorio: 2 },
+                    2: { escritorio: 3, ppci: 1 },
+                    3: { escritorio: 3, mentoria: 2 },
+                    4: { escritorio: 3, mentoria: 2 }
+                }
+            },
+            {
+                id: 10,
+                text: "O que você mais precisa AGORA? (até 2 opções)",
+                type: "multiple",
+                max: 2,
+                options: [
+                    "Conhecimento técnico (como fazer projetos)",
+                    "Estratégias de captação de clientes",
+                    "Modelos prontos (contratos, propostas)",
+                    "Organização e processos do negócio",
+                    "Precificação correta dos serviços",
+                    "Mentoria/direcionamento personalizado",
+                    "Comunidade para trocar experiências"
+                ],
+                scoring: {
+                    0: { ppci: 3, avcb: 1 },
+                    1: { escritorio: 3, avcb: 2, mentoria: 2 },
+                    2: { avcb: 2, escritorio: 2, ppci: 1 },
+                    3: { escritorio: 3, mentoria: 1 },
+                    4: { escritorio: 3, mentoria: 1 },
+                    5: { mentoria: 3 },
+                    6: { escritorio: 1, avcb: 1 }
+                }
+            },
+            {
+                id: 11,
+                text: "Quanto tempo você tem disponível por semana?",
+                type: "single",
+                options: [
+                    "Menos de 5 horas (só finais de semana)",
+                    "5 a 10 horas (algumas noites + fim de semana)",
+                    "10 a 20 horas (meio período)",
+                    "Mais de 20 horas (dedicação quase integral)",
+                    "Tempo total (foco 100% nisso)"
+                ]
+            },
+            {
+                id: 12,
+                text: "Qual é a sua urgência para gerar resultados?",
+                type: "single",
+                options: [
+                    "Muito urgente (1-2 semanas)",
+                    "Urgente (1 mês)",
+                    "Moderada (2-3 meses)",
+                    "Tranquila (posso ir com calma)"
+                ],
+                scoring: {
+                    0: { avcb: 3, mentoria: 3 },
+                    1: { avcb: 2, escritorio: 1 }
+                }
+            },
+            {
+                id: 13,
+                text: "Qual(is) faixa(s) de investimento fazem sentido? (até 2)",
+                type: "multiple",
+                max: 2,
+                options: [
+                    "Até R$ 400",
+                    "R$ 400 a R$ 600",
+                    "R$ 600 a R$ 800",
+                    "R$ 800 a R$ 1.200",
+                    "Acima de R$ 1.200"
+                ],
+                scoring: {
+                    0: { avcb: 2 },
+                    1: { avcb: 1, escritorio: 1 },
+                    2: { ppci: 1, escritorio: 1 },
+                    3: { mentoria: 1 },
+                    4: { mentoria: 2 }
+                }
+            },
+            {
+                id: 14,
+                text: "Como você prefere aprender?",
+                type: "single",
+                options: [
+                    "Vendo alguém fazer e fazendo junto (hands-on)",
+                    "Estudando teoria e depois aplicando",
+                    "Recebendo orientação personalizada 1:1",
+                    "Mistura: aulas + materiais + comunidade"
+                ],
+                scoring: {
+                    0: { ppci: 3, avcb: 2 },
+                    1: { ppci: 2, escritorio: 1 },
+                    2: { mentoria: 3 },
+                    3: { escritorio: 1 }
+                }
+            },
+            {
+                id: 15,
+                text: "O que você valoriza mais? (até 3 opções)",
+                type: "multiple",
+                max: 3,
+                options: [
+                    "Conteúdo técnico detalhado",
+                    "Modelos e planilhas prontos",
+                    "Comunidade de networking",
+                    "Suporte direto do criador",
+                    "Aplicação prática (resolver projetos reais)",
+                    "Estratégias de negócios e vendas"
+                ],
+                scoring: {
+                    0: { ppci: 2 },
+                    1: { avcb: 2, escritorio: 1 },
+                    2: { escritorio: 1 },
+                    3: { mentoria: 3 },
+                    4: { ppci: 2, avcb: 2 },
+                    5: { escritorio: 3 }
+                }
+            }
+        ];
+
+        // PRODUTOS
+        const products = {
+            ppci: {
+                icon: "📚",
+                title: "PPCI do Zero ao Aprovado",
+                subtitle: "Domine a parte técnica de projetos de incêndio",
+                reasons: [
+                    "Você quer aprender uma habilidade técnica lucrativa",
+                    "Precisa de conhecimento em PPCI para crescer",
+                    "Prefere aprender fazendo (hands-on)"
+                ],
+                price: "R$ 599,90",
+                benefits: [
+                    "7 aulas completas (1h30 cada)",
+                    "Projeto do zero à aprovação (passo a passo)",
+                    "Planilhas e templates prontos",
+                    "Comunidade exclusiva no WhatsApp"
+                ],
+                link: "https://chk.eduzz.com/D0RADEYJ9Y"
+            },
+            avcb: {
+                icon: "🎯",
+                title: "Guia AVCB, CLCB e Laudos",
+                subtitle: "Serviço de entrada rápida e receita recorrente",
+                reasons: [
+                    "Você quer gerar renda extra rapidamente",
+                    "Precisa de faturamento recorrente (sem instabilidade)",
+                    "Meta de R$ 2-10k/mês está alinhada"
+                ],
+                price: "R$ 349,90",
+                benefits: [
+                    "4 aulas completas sobre AVCB/CLCB",
+                    "Modelos de laudos prontos para usar",
+                    "Fluxo completo do serviço (início ao fim)",
+                    "Comunidade exclusiva no WhatsApp"
+                ],
+                link: "https://chk.eduzz.com/7977R77A9E"
+            },
+            escritorio: {
+                icon: "🏢",
+                title: "Construindo um Escritório Lucrativo",
+                subtitle: "Estruture ou cresça seu negócio de forma profissional",
+                reasons: [
+                    "Você quer abrir ou organizar um escritório",
+                    "Precisa captar clientes de forma consistente",
+                    "Necessita de processos, precificação e organização"
+                ],
+                price: "R$ 499,90",
+                benefits: [
+                    "4 aulas completas (passo a passo comercial)",
+                    "Mapa mental com planilhas e modelos prontos",
+                    "Estratégias de captação e vendas validadas",
+                    "Comunidade exclusiva no WhatsApp"
+                ],
+                link: "https://chk.eduzz.com/Q9N5KOBD01"
+            },
+            mentoria: {
+                icon: "👨‍🏫",
+                title: "Mentoria Individual",
+                subtitle: "Direcionamento personalizado para sua situação",
+                reasons: [
+                    "Falta direcionamento estratégico claro",
+                    "Você quer acelerar resultados com orientação 1:1",
+                    "Precisa de consultoria personalizada para seu caso"
+                ],
+                price: "R$ 1.000 ou R$ 1.800",
+                benefits: [
+                    "Reuniões 1:1 com Vinicius Figueiredo",
+                    "Acesso gratuito a um dos cursos",
+                    "WhatsApp direto por 3 meses",
+                    "Materiais exclusivos (planilhas, modelos)"
+                ],
+                link: "https://forms.gle/L3uYHSGFArMjrHyw6"
+            }
+        };
+
+        // ========== FUNÇÕES DO QUIZ ==========
+
+        /**
+         * INICIAR QUIZ (com validação de segurança)
+         */
+        function startQuiz() {
+            // Limpar mensagens de erro
+            document.getElementById('name-error').style.display = 'none';
+            document.getElementById('email-error').style.display = 'none';
+
+            const nameInput = document.getElementById('name').value;
+            const emailInput = document.getElementById('email').value;
+            const phoneInput = document.getElementById('phone').value;
+
+            // Validar nome
+            if (!validateName(nameInput)) {
+                document.getElementById('name-error').style.display = 'block';
+                return;
+            }
+
+            // Validar email
+            if (!validateEmail(emailInput)) {
+                document.getElementById('email-error').style.display = 'block';
+                return;
+            }
+
+            // Validar telefone (se preenchido)
+            if (phoneInput && !validatePhone(phoneInput)) {
+                alert('Por favor, insira um número de telefone válido.');
+                return;
+            }
+
+            // Sanitizar e armazenar dados
+            userData.name = sanitizeInput(nameInput.trim());
+            userData.email = sanitizeInput(emailInput.trim().toLowerCase());
+            userData.phone = sanitizeInput(phoneInput.trim());
+
+            // Prosseguir
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+
+            showQuestion();
+        }
+
+        /**
+         * MOSTRAR PERGUNTA
+         */
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            const totalQuestions = questions.length;
+
+            // Atualizar progresso
+            const progress = ((currentQuestion + 1) / totalQuestions) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+
+            // Atualizar texto (usando textContent para evitar XSS)
+            document.getElementById('question-number').textContent = `Pergunta ${currentQuestion + 1} de ${totalQuestions}`;
+            document.getElementById('question-text').textContent = question.text;
+
+            // Criar opções de forma segura
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionDiv = createSafeElement('div', { class: 'option' });
+
+                const inputType = question.type === 'single' ? 'radio' : 'checkbox';
+                const inputName = question.type === 'single' ? 'q' + question.id : 'q' + question.id + '_' + index;
+
+                // Verificar se já foi respondida
+                const isChecked = answers[currentQuestion] && 
+                    (question.type === 'single' ? answers[currentQuestion] === index : answers[currentQuestion].includes(index));
+
+                const input = createSafeElement('input', {
+                    type: inputType,
+                    id: 'opt_' + index,
+                    name: inputName,
+                    value: index
+                });
+                
+                if (isChecked) {
+                    input.checked = true;
+                    optionDiv.classList.add('selected');
+                }
+
+                input.addEventListener('change', () => selectOption(index, question.type, question.max || 999));
+
+                const label = createSafeElement('label', { for: 'opt_' + index });
+                label.textContent = option;
+
+                optionDiv.appendChild(input);
+                optionDiv.appendChild(label);
+
+                optionDiv.addEventListener('click', (e) => {
+                    if (e.target !== input && e.target !== label) {
+                        input.click();
+                    }
+                });
+
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            // Botões
+            document.getElementById('btn-back').style.display = currentQuestion === 0 ? 'none' : 'block';
+            document.getElementById('btn-next').textContent = currentQuestion === totalQuestions - 1 ? 'Ver Resultado →' : 'Próxima →';
+
+            updateNextButton();
+        }
+
+        /**
+         * SELECIONAR OPÇÃO
+         */
+        function selectOption(index, type, max) {
+            if (type === 'single') {
+                answers[currentQuestion] = index;
+
+                // Atualizar visual
+                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                document.querySelectorAll('.option')[index].classList.add('selected');
+            } else {
+                // Multiple choice
+                if (!answers[currentQuestion]) {
+                    answers[currentQuestion] = [];
+                }
+
+                const checkbox = document.getElementById('opt_' + index);
+                
+                if (checkbox.checked) {
+                    if (answers[currentQuestion].length < max) {
+                        answers[currentQuestion].push(index);
+                        document.querySelectorAll('.option')[index].classList.add('selected');
+                    } else {
+                        checkbox.checked = false;
+                        alert(`Você pode selecionar no máximo ${max} ${max === 1 ? 'opção' : 'opções'}.`);
+                    }
+                } else {
+                    answers[currentQuestion] = answers[currentQuestion].filter(i => i !== index);
+                    document.querySelectorAll('.option')[index].classList.remove('selected');
+                }
+            }
+
+            updateNextButton();
+        }
+
+        /**
+         * ATUALIZAR BOTÃO PRÓXIMA
+         */
+        function updateNextButton() {
+            const question = questions[currentQuestion];
+            const hasAnswer = answers[currentQuestion] !== undefined && 
+                (question.type === 'single' ? true : answers[currentQuestion].length > 0);
+
+            document.getElementById('btn-next').disabled = !hasAnswer;
+        }
+
+        /**
+         * PRÓXIMA PERGUNTA
+         */
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                calculateResult();
+            }
+        }
+
+        /**
+         * PERGUNTA ANTERIOR
+         */
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        /**
+         * CALCULAR RESULTADO
+         */
+        function calculateResult() {
+            // Resetar scores
+            scores = { ppci: 0, avcb: 0, escritorio: 0, mentoria: 0 };
+
+            // Calcular pontuação
+            questions.forEach((question, qIndex) => {
+                if (question.scoring) {
+                    const answer = answers[qIndex];
+                    
+                    if (question.type === 'single' && answer !== undefined) {
+                        const scoring = question.scoring[answer];
+                        if (scoring) {
+                            Object.keys(scoring).forEach(key => {
+                                scores[key] += scoring[key];
+                            });
+                        }
+                    } else if (question.type === 'multiple' && answer && answer.length > 0) {
+                        answer.forEach(ansIndex => {
+                            const scoring = question.scoring[ansIndex];
+                            if (scoring) {
+                                Object.keys(scoring).forEach(key => {
+                                    scores[key] += scoring[key];
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Determinar produto vencedor
+            let winner = 'ppci';
+            let maxScore = scores.ppci;
+
+            Object.keys(scores).forEach(key => {
+                if (scores[key] > maxScore) {
+                    maxScore = scores[key];
+                    winner = key;
+                }
+            });
+
+            showResult(winner);
+
+            // Log seguro (não expõe dados sensíveis)
+            console.log('Quiz completado');
+            console.log('Produto recomendado:', winner);
+            console.log('Pontuação:', scores);
+        }
+
+        /**
+         * MOSTRAR RESULTADO (de forma segura)
+         */
+        function showResult(productKey) {
+            const product = products[productKey];
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            const resultContainer = document.getElementById('result-content');
+            resultContainer.innerHTML = ''; // Limpar
+
+            // Criar elementos de forma segura
+            const iconDiv = createSafeElement('div', { class: 'result-icon' });
+            iconDiv.textContent = product.icon;
+
+            const title1 = createSafeElement('h2', { class: 'result-title' });
+            title1.textContent = 'Seu produto ideal:';
+
+            const title2 = createSafeElement('h1', { class: 'result-title' });
+            title2.style.color = '#667eea';
+            title2.textContent = product.title;
+
+            const subtitle = createSafeElement('p', { class: 'result-subtitle' });
+            subtitle.textContent = product.subtitle;
+
+            // Box de razões
+            const reasonsBox = createSafeElement('div', { class: 'result-box' });
+            const reasonsTitle = createSafeElement('h3');
+            reasonsTitle.textContent = '✅ Por que é ideal para você:';
+            reasonsBox.appendChild(reasonsTitle);
+
+            const reasonsList = createSafeElement('ul');
+            product.reasons.forEach(reason => {
+                const li = createSafeElement('li');
+                li.textContent = reason;
+                reasonsList.appendChild(li);
+            });
+            reasonsBox.appendChild(reasonsList);
+
+            // Preço
+            const priceDiv = createSafeElement('div', { class: 'price' });
+            priceDiv.textContent = product.price;
+
+            // Box de benefícios
+            const benefitsBox = createSafeElement('div', { class: 'result-box' });
+            const benefitsTitle = createSafeElement('h3');
+            benefitsTitle.textContent = '📦 O que você recebe:';
+            benefitsBox.appendChild(benefitsTitle);
+
+            const benefitsList = createSafeElement('ul');
+            product.benefits.forEach(benefit => {
+                const li = createSafeElement('li');
+                li.textContent = benefit;
+                benefitsList.appendChild(li);
+            });
+            benefitsBox.appendChild(benefitsList);
+
+            // CTA
+            const ctaLink = createSafeElement('a', { 
+                href: product.link,
+                class: 'cta-button',
+                target: '_blank',
+                rel: 'noopener noreferrer' // Segurança contra tabnabbing
+            });
+            ctaLink.textContent = productKey === 'mentoria' ? 'QUERO APLICAR PARA MENTORIA' : 'QUERO COMPRAR AGORA';
+
+            // Nota
+            const note = createSafeElement('p', { class: 'note' });
+            note.textContent = productKey === 'mentoria' 
+                ? 'A mentoria tem vagas limitadas. Preencha o formulário e o Vinicius entrará em contato.' 
+                : 'Tem dúvidas? Entre em contato com o Vinicius no LinkedIn ou Instagram.';
+
+            // Adicionar tudo ao container
+            resultContainer.appendChild(iconDiv);
+            resultContainer.appendChild(title1);
+            resultContainer.appendChild(title2);
+            resultContainer.appendChild(subtitle);
+            resultContainer.appendChild(reasonsBox);
+            resultContainer.appendChild(priceDiv);
+            resultContainer.appendChild(benefitsBox);
+            resultContainer.appendChild(ctaLink);
+            resultContainer.appendChild(note);
+        }
+    </script>
+</body>
+</html>
