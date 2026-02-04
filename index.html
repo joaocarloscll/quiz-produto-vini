@@ -1,32 +1,91 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Charset & Viewport -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://www.google-analytics.com;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Quiz inteligente para descobrir qual curso de engenharia é ideal para você. Sistema de recomendação personalizado baseado em IA para engenheiros civis.">
+    <meta name="keywords" content="PPCI, AVCB, CLCB, engenharia civil, curso engenharia, vinicius figueiredo, projetos incêndio">
+    <meta name="author" content="Vinicius Figueiredo">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://joaocarloscll.github.io/quiz-produto-vini/">
+    
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:title" content="Descubra qual produto é ideal para você | Vinicius Figueiredo">
+    <meta property="og:description" content="Quiz personalizado: descubra qual curso de engenharia combina com seu perfil profissional em 3 minutos.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://joaocarloscll.github.io/quiz-produto-vini/">
+    <meta property="og:image" content="https://joaocarloscll.github.io/quiz-produto-vini/og-image.png">
+    <meta property="og:locale" content="pt_BR">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Descubra qual produto é ideal para você">
+    <meta name="twitter:description" content="Quiz personalizado para engenheiros civis - 3 minutos">
+    <meta name="twitter:image" content="https://joaocarloscll.github.io/quiz-produto-vini/twitter-image.png">
+    
+    <!-- Security -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; img-src 'self' data: https:;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta name="description" content="Descubra qual produto de engenharia é ideal para você. Teste personalizado com recomendação baseada no seu perfil profissional.">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <!-- PWA -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Preconnect Performance -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    
     <title>Descubra qual produto é ideal para você | Vinicius Figueiredo</title>
     
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XXXXXXXXXX');
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Quiz",
+        "name": "Quiz de Recomendação de Cursos de Engenharia",
+        "description": "Descubra qual curso de engenharia civil é ideal para seu perfil profissional",
+        "author": {
+            "@type": "Person",
+            "name": "Vinicius Figueiredo",
+            "url": "https://www.linkedin.com/in/vinicius-figueiredo-engenharia/"
+        },
+        "provider": {
+            "@type": "Organization",
+            "name": "Vinicius Figueiredo - Engenharia"
+        },
+        "educationalLevel": "Professional",
+        "timeRequired": "PT3M",
+        "inLanguage": "pt-BR"
+    }
     </script>
     
+    <!-- Google Analytics (Async) -->
+    <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        ga('create', 'G-XXXXXXXXXX', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <script async src="https://www.google-analytics.com/analytics.js"></script>
+    
     <style>
-        * {
+        /* ========== CSS RESET & MODERN BASELINE ========== */
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Custom Properties (CSS Variables) */
         :root {
+            /* Colors */
             --color-ppci: #667eea;
             --color-avcb: #48bb78;
             --color-escritorio: #ed8936;
@@ -34,135 +93,246 @@
             --color-primary: #667eea;
             --color-dark: #2d3748;
             --color-gray: #718096;
+            --color-light-gray: #e2e8f0;
+            --color-bg: #f7fafc;
+            --color-white: #ffffff;
+            --color-success: #48bb78;
+            --color-error: #e53e3e;
+            
+            /* Spacing Scale */
+            --space-xs: clamp(4px, 1vw, 8px);
+            --space-sm: clamp(8px, 2vw, 12px);
+            --space-md: clamp(12px, 3vw, 16px);
+            --space-lg: clamp(16px, 4vw, 24px);
+            --space-xl: clamp(24px, 6vw, 40px);
+            
+            /* Typography Scale */
+            --font-xs: clamp(12px, 2.5vw, 13px);
+            --font-sm: clamp(13px, 3vw, 14px);
+            --font-base: clamp(14px, 3.5vw, 16px);
+            --font-md: clamp(16px, 4vw, 18px);
+            --font-lg: clamp(18px, 4.5vw, 20px);
+            --font-xl: clamp(20px, 5vw, 24px);
+            --font-2xl: clamp(22px, 5.5vw, 28px);
+            --font-3xl: clamp(24px, 6vw, 32px);
+            --font-4xl: clamp(48px, 12vw, 64px);
+            
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: clamp(15px, 4vw, 20px);
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.3);
+            
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-base: 200ms ease;
+            --transition-slow: 300ms ease;
+            
+            /* Z-index Scale */
+            --z-base: 1;
+            --z-dropdown: 100;
+            --z-sticky: 200;
+            --z-modal: 500;
+            --z-toast: 1000;
         }
 
+        /* Focus visible (acessibilidade) */
+        *:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Body otimizado */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
             min-height: 100vh;
+            min-height: 100dvh; /* Dynamic viewport height */
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: clamp(10px, 3vw, 20px);
-            transition: background 0.5s ease;
+            padding: var(--space-md);
+            transition: background var(--transition-slow);
+            color: var(--color-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
+        /* Container otimizado */
         .container {
-            background: white;
-            border-radius: clamp(15px, 4vw, 20px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 700px;
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: min(700px, 100% - var(--space-md) * 2);
             width: 100%;
-            padding: clamp(20px, 5vw, 40px);
-            animation: slideIn 0.5s ease-out;
+            padding: var(--space-xl);
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            container-type: inline-size;
+            container-name: quiz-container;
         }
 
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(30px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
+        /* Typography */
         h1 {
-            color: #2d3748;
-            font-size: clamp(22px, 5vw, 28px);
-            margin-bottom: 10px;
+            color: var(--color-dark);
+            font-size: var(--font-2xl);
+            margin-bottom: var(--space-sm);
             text-align: center;
             line-height: 1.3;
+            font-weight: 700;
         }
 
         .subtitle {
-            color: #718096;
+            color: var(--color-gray);
             text-align: center;
-            margin-bottom: 10px;
-            font-size: clamp(14px, 3.5vw, 16px);
+            margin-bottom: var(--space-sm);
+            font-size: var(--font-base);
             line-height: 1.5;
         }
 
         .time-estimate {
             text-align: center;
-            color: #667eea;
-            font-size: clamp(13px, 3vw, 14px);
+            color: var(--color-primary);
+            font-size: var(--font-sm);
             font-weight: 600;
-            margin-bottom: 30px;
+            margin-bottom: var(--space-lg);
         }
 
+        /* Progress Bar com animação */
         .progress-bar {
             width: 100%;
             height: 8px;
-            background: #e2e8f0;
+            background: var(--color-light-gray);
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: var(--space-sm);
             overflow: hidden;
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--color-primary) 0%, #764ba2 100%);
             border-radius: 10px;
-            transition: width 0.3s ease;
+            transition: width var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Shimmer effect no progress */
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            to { left: 100%; }
         }
 
         .progress-text {
             text-align: center;
-            color: #718096;
-            font-size: 14px;
-            margin-bottom: 20px;
+            color: var(--color-gray);
+            font-size: var(--font-sm);
+            margin-bottom: var(--space-lg);
             font-weight: 600;
         }
 
+        /* Questions */
         .question-container {
-            margin-bottom: 30px;
+            margin-bottom: var(--space-lg);
         }
 
         .question-number {
             color: var(--color-primary);
             font-weight: 600;
-            font-size: clamp(13px, 3vw, 14px);
-            margin-bottom: 10px;
+            font-size: var(--font-sm);
+            margin-bottom: var(--space-sm);
         }
 
         .question-text {
-            color: #2d3748;
-            font-size: clamp(18px, 4vw, 20px);
+            color: var(--color-dark);
+            font-size: var(--font-lg);
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: var(--space-lg);
             line-height: 1.4;
         }
 
+        /* Options com micro-interações */
         .options {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: var(--space-md);
         }
 
         .option {
-            background: #f7fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: clamp(14px, 3vw, 16px) clamp(16px, 4vw, 20px);
+            background: var(--color-bg);
+            border: 2px solid var(--color-light-gray);
+            border-radius: var(--radius-md);
+            padding: var(--space-md) var(--space-lg);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all var(--transition-base);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--space-md);
             user-select: none;
+            position: relative;
+            will-change: transform, border-color;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--color-primary), #764ba2);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+            z-index: -1;
         }
 
         .option:hover {
             border-color: var(--color-primary);
             background: #edf2f7;
-            transform: translateX(5px);
+            transform: translateX(4px) scale(1.01);
+        }
+
+        .option:active {
+            transform: translateX(2px) scale(0.99);
         }
 
         .option.selected {
             border-color: var(--color-primary);
             background: #e6effb;
+        }
+
+        .option.selected::before {
+            opacity: 0.1;
         }
 
         .option input[type="radio"],
@@ -171,64 +341,104 @@
             height: 20px;
             cursor: pointer;
             flex-shrink: 0;
+            accent-color: var(--color-primary);
         }
 
         .option label {
             cursor: pointer;
             flex: 1;
-            font-size: clamp(14px, 3.5vw, 16px);
-            color: #2d3748;
+            font-size: var(--font-base);
+            color: var(--color-dark);
             line-height: 1.4;
         }
 
+        /* Input fields com estados */
         .input-field {
             width: 100%;
-            padding: clamp(12px, 3vw, 14px) clamp(16px, 4vw, 18px);
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: clamp(14px, 3.5vw, 16px);
-            margin-bottom: 15px;
-            transition: border-color 0.2s ease;
+            padding: var(--space-md) var(--space-lg);
+            border: 2px solid var(--color-light-gray);
+            border-radius: var(--radius-md);
+            font-size: var(--font-base);
+            margin-bottom: var(--space-md);
+            transition: all var(--transition-base);
+            font-family: inherit;
+        }
+
+        .input-field:hover {
+            border-color: var(--color-gray);
         }
 
         .input-field:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-field:invalid:not(:placeholder-shown) {
+            border-color: var(--color-error);
         }
 
         .error-message {
-            color: #e53e3e;
-            font-size: 14px;
-            margin-top: -10px;
-            margin-bottom: 10px;
+            color: var(--color-error);
+            font-size: var(--font-sm);
+            margin-top: calc(var(--space-sm) * -1);
+            margin-bottom: var(--space-sm);
             display: none;
+            animation: shake 0.3s;
         }
 
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Buttons com estados */
         .buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
         }
 
         button {
             flex: 1;
-            padding: clamp(14px, 3.5vw, 16px) clamp(20px, 5vw, 24px);
+            padding: var(--space-md) var(--space-xl);
             border: none;
-            border-radius: 12px;
-            font-size: clamp(14px, 3.5vw, 16px);
+            border-radius: var(--radius-md);
+            font-size: var(--font-base);
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all var(--transition-base);
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.2);
+            transform: translateX(-100%);
+            transition: transform var(--transition-base);
+        }
+
+        button:hover::before {
+            transform: translateX(0);
         }
 
         .btn-next {
             background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
-            color: white;
+            color: var(--color-white);
         }
 
         .btn-next:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-next:active:not(:disabled) {
+            transform: translateY(0);
         }
 
         .btn-next:disabled {
@@ -238,7 +448,7 @@
         }
 
         .btn-back {
-            background: #e2e8f0;
+            background: var(--color-light-gray);
             color: #4a5568;
         }
 
@@ -246,20 +456,20 @@
             background: #cbd5e0;
         }
 
-        /* LOADING SCREEN */
+        /* Loading screen otimizado */
         .loading-screen {
             text-align: center;
-            padding: 60px 20px;
+            padding: var(--space-xl) var(--space-lg);
         }
 
         .loading-spinner {
             width: 60px;
             height: 60px;
-            border: 4px solid #e2e8f0;
+            border: 4px solid var(--color-light-gray);
             border-top-color: var(--color-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 30px;
+            margin: 0 auto var(--space-lg);
         }
 
         @keyframes spin {
@@ -267,129 +477,132 @@
         }
 
         .loading-text {
-            font-size: 18px;
+            font-size: var(--font-md);
             color: #4a5568;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: var(--space-sm);
         }
 
         .loading-subtext {
-            font-size: 14px;
-            color: #718096;
+            font-size: var(--font-sm);
+            color: var(--color-gray);
         }
 
-        /* RESULTADO */
+        /* Results otimizados */
         .result-container {
             text-align: center;
         }
 
         .result-icon {
-            font-size: clamp(48px, 12vw, 64px);
-            margin-bottom: 20px;
+            font-size: var(--font-4xl);
+            margin-bottom: var(--space-lg);
+            animation: bounce 1s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .result-title {
-            font-size: clamp(24px, 6vw, 32px);
-            color: #2d3748;
-            margin-bottom: 15px;
+            font-size: var(--font-3xl);
+            color: var(--color-dark);
+            margin-bottom: var(--space-md);
             font-weight: 700;
             line-height: 1.2;
         }
 
         .result-subtitle {
-            font-size: clamp(16px, 4vw, 18px);
-            color: #718096;
-            margin-bottom: 30px;
+            font-size: var(--font-md);
+            color: var(--color-gray);
+            margin-bottom: var(--space-lg);
             line-height: 1.4;
         }
 
         .result-box {
-            background: #f7fafc;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
+            background: var(--color-bg);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
             text-align: left;
         }
 
         .result-box h3 {
             color: var(--color-primary);
-            margin-bottom: 15px;
-            font-size: 18px;
+            margin-bottom: var(--space-md);
+            font-size: var(--font-md);
         }
 
         .result-box ul {
             list-style: none;
-            margin-bottom: 15px;
+            margin-bottom: var(--space-md);
         }
 
         .result-box li {
             color: #4a5568;
-            margin-bottom: 10px;
-            padding-left: 25px;
+            margin-bottom: var(--space-sm);
+            padding-left: var(--space-xl);
             position: relative;
+            line-height: 1.5;
         }
 
-        .result-box li:before {
+        .result-box li::before {
             content: "✓";
             position: absolute;
             left: 0;
-            color: #48bb78;
+            color: var(--color-success);
             font-weight: bold;
+            font-size: var(--font-md);
         }
 
+        /* Profile summary com Grid */
         .profile-summary {
-            background: #fff;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: clamp(18px, 4vw, 20px);
-            margin-bottom: 20px;
+            background: var(--color-white);
+            border: 2px solid var(--color-light-gray);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
         }
 
         .profile-summary h4 {
-            color: #2d3748;
-            margin-bottom: 15px;
-            font-size: clamp(15px, 3.5vw, 16px);
+            color: var(--color-dark);
+            margin-bottom: var(--space-md);
+            font-size: var(--font-base);
         }
 
         .profile-item {
             display: grid;
             grid-template-columns: minmax(120px, auto) 1fr;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: clamp(13px, 3vw, 14px);
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            font-size: var(--font-sm);
             color: #4a5568;
             align-items: start;
         }
 
         .profile-item strong {
-            color: #2d3748;
+            color: var(--color-dark);
         }
 
-        @media (max-width: 500px) {
-            .profile-item {
-                grid-template-columns: 1fr;
-                gap: 3px;
-            }
-        }
-
+        /* Timeline com Flexbox */
         .timeline {
-            background: #fff;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: clamp(20px, 4vw, 25px);
-            margin-bottom: 20px;
+            background: var(--color-white);
+            border: 2px solid var(--color-light-gray);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
         }
 
         .timeline h4 {
-            color: #2d3748;
-            margin-bottom: 20px;
-            font-size: clamp(15px, 3.5vw, 16px);
+            color: var(--color-dark);
+            margin-bottom: var(--space-lg);
+            font-size: var(--font-base);
         }
 
         .timeline-item {
             display: flex;
-            gap: clamp(10px, 3vw, 15px);
-            margin-bottom: 15px;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
             align-items: flex-start;
             flex-wrap: wrap;
         }
@@ -398,7 +611,7 @@
             min-width: clamp(80px, 20vw, 90px);
             font-weight: 600;
             color: var(--color-primary);
-            font-size: clamp(13px, 3vw, 14px);
+            font-size: var(--font-sm);
             flex-shrink: 0;
         }
 
@@ -406,28 +619,45 @@
             flex: 1;
             min-width: 200px;
             color: #4a5568;
-            font-size: clamp(13px, 3vw, 14px);
+            font-size: var(--font-sm);
             line-height: 1.4;
         }
 
+        /* Price */
         .price {
             font-size: clamp(24px, 6vw, 28px);
-            color: #2d3748;
+            color: var(--color-dark);
             font-weight: 700;
-            margin: 20px 0;
+            margin: var(--space-lg) 0;
         }
 
+        /* CTA Button otimizado */
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-            padding: clamp(16px, 4vw, 18px) clamp(30px, 8vw, 40px);
-            border-radius: 12px;
+            background: linear-gradient(135deg, var(--color-success) 0%, #38a169 100%);
+            color: var(--color-white);
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-md);
             text-decoration: none;
             font-weight: 600;
-            font-size: clamp(16px, 4vw, 18px);
-            margin-top: 20px;
-            transition: all 0.2s ease;
+            font-size: var(--font-md);
+            margin-top: var(--space-lg);
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.2);
+            transform: translateX(-100%);
+            transition: transform var(--transition-base);
+        }
+
+        .cta-button:hover::before {
+            transform: translateX(0);
         }
 
         .cta-button:hover {
@@ -435,52 +665,45 @@
             box-shadow: 0 10px 25px rgba(72, 187, 120, 0.4);
         }
 
-        .note {
-            font-size: 14px;
-            color: #718096;
-            margin-top: 20px;
-        }
-
+        /* Social Contact */
         .social-contact {
-            background: #fff;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: clamp(18px, 4vw, 20px);
-            margin: 25px 0;
+            background: var(--color-white);
+            border: 2px solid var(--color-light-gray);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin: var(--space-xl) 0;
             text-align: center;
         }
 
         .social-contact h4 {
-            color: #2d3748;
-            margin-bottom: 15px;
-            font-size: clamp(15px, 3.5vw, 16px);
+            color: var(--color-dark);
+            margin-bottom: var(--space-md);
+            font-size: var(--font-base);
         }
 
         .social-links {
             display: flex;
             justify-content: center;
-            gap: clamp(10px, 3vw, 15px);
+            gap: var(--space-md);
             flex-wrap: wrap;
         }
 
         .social-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: clamp(8px, 2vw, 10px) clamp(14px, 4vw, 18px);
-            background: #f7fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-bg);
+            border: 2px solid var(--color-light-gray);
+            border-radius: var(--radius-sm);
             text-decoration: none;
-            color: #2d3748;
+            color: var(--color-dark);
             font-weight: 600;
-            font-size: clamp(13px, 3vw, 14px);
-            transition: all 0.2s ease;
+            font-size: var(--font-sm);
+            transition: all var(--transition-base);
         }
 
         .social-link:hover {
-            border-color: var(--color-primary);
-            background: #edf2f7;
             transform: translateY(-2px);
         }
 
@@ -491,7 +714,6 @@
 
         .social-link.linkedin:hover {
             background: #e6f3f9;
-            border-color: #0077b5;
         }
 
         .social-link.instagram {
@@ -501,7 +723,6 @@
 
         .social-link.instagram:hover {
             background: #fce8f0;
-            border-color: #E1306C;
         }
 
         .social-link.youtube {
@@ -511,64 +732,93 @@
 
         .social-link.youtube:hover {
             background: #ffe6e6;
-            border-color: #FF0000;
         }
 
+        .note {
+            font-size: var(--font-sm);
+            color: var(--color-gray);
+            margin-top: var(--space-lg);
+        }
+
+        /* Footer */
         .footer {
             text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            font-size: 12px;
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--color-light-gray);
+            font-size: var(--font-xs);
             color: #a0aec0;
         }
 
+        /* Welcome back banner */
         .welcome-back {
             background: #e6fffa;
             border: 2px solid #81e6d9;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
             text-align: center;
         }
 
         .welcome-back-text {
             color: #234e52;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: var(--space-sm);
         }
 
         .welcome-back-btn {
             background: #38b2ac;
-            color: white;
+            color: var(--color-white);
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.2s ease;
+            transition: all var(--transition-base);
+            font-family: inherit;
         }
 
         .welcome-back-btn:hover {
             background: #319795;
+            transform: translateY(-1px);
         }
 
+        /* Utility classes */
         .hidden {
-            display: none;
+            display: none !important;
         }
 
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Container Query (Profile mobile) */
+        @container quiz-container (max-width: 500px) {
+            .profile-item {
+                grid-template-columns: 1fr;
+                gap: calc(var(--space-xs) / 2);
+            }
+        }
+
+        /* Media queries otimizadas */
         @media (max-width: 500px) {
             .welcome-back-btn {
-                padding: 8px 16px;
-                font-size: 13px;
+                padding: var(--space-sm) var(--space-md);
+                font-size: var(--font-xs);
             }
 
             .welcome-back-btn:not(:first-child) {
-                margin-left: 8px !important;
+                margin-left: var(--space-sm) !important;
             }
         }
 
-        /* Otimização para tablets */
         @media (min-width: 768px) and (max-width: 1024px) {
             .container {
                 max-width: 650px;
@@ -579,16 +829,31 @@
             }
         }
 
-        /* Otimização para telas grandes */
         @media (min-width: 1400px) {
             .container {
                 max-width: 750px;
             }
         }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            
+            button, .social-links {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="main-container">
         <!-- TELA INICIAL -->
         <div id="welcome-screen">
             <h1>Descubra qual produto é ideal para você</h1>
@@ -598,62 +863,89 @@
             <p class="time-estimate">Leva apenas 3 minutos</p>
             
             <!-- Welcome Back -->
-            <div id="welcome-back-banner" class="welcome-back hidden">
+            <div id="welcome-back-banner" class="welcome-back hidden" role="alert" aria-live="polite">
                 <div class="welcome-back-text">Bem-vindo de volta! Você estava na pergunta <span id="saved-question"></span>.</div>
-                <button class="welcome-back-btn" onclick="continueFromSaved()">Continuar</button>
-                <button class="welcome-back-btn" style="background: #cbd5e0; color: #4a5568; margin-left: 10px;" onclick="startFresh()">Recomeçar</button>
+                <button class="welcome-back-btn" onclick="continueFromSaved()" aria-label="Continuar de onde parou">Continuar</button>
+                <button class="welcome-back-btn" style="background: #cbd5e0; color: #4a5568; margin-left: 10px;" onclick="startFresh()" aria-label="Recomeçar quiz do início">Recomeçar</button>
             </div>
             
-            <div style="margin-top: 30px;">
-                <input type="text" id="name" class="input-field" placeholder="Nome completo" required maxlength="100">
-                <div class="error-message" id="name-error">Nome inválido</div>
+            <form id="user-form" onsubmit="event.preventDefault(); startQuiz();" novalidate>
+                <input 
+                    type="text" 
+                    id="name" 
+                    class="input-field" 
+                    placeholder="Nome completo" 
+                    required 
+                    maxlength="100"
+                    autocomplete="name"
+                    aria-label="Nome completo"
+                    aria-required="true">
+                <div class="error-message" id="name-error" role="alert">Nome inválido</div>
                 
-                <input type="email" id="email" class="input-field" placeholder="E-mail" required maxlength="100">
-                <div class="error-message" id="email-error">E-mail inválido</div>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="input-field" 
+                    placeholder="E-mail" 
+                    required 
+                    maxlength="100"
+                    autocomplete="email"
+                    aria-label="Endereço de e-mail"
+                    aria-required="true">
+                <div class="error-message" id="email-error" role="alert">E-mail inválido</div>
                 
-                <input type="tel" id="phone" class="input-field" placeholder="WhatsApp" required maxlength="20">
-                <div class="error-message" id="phone-error">WhatsApp inválido</div>
-            </div>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    class="input-field" 
+                    placeholder="WhatsApp" 
+                    required 
+                    maxlength="20"
+                    autocomplete="tel"
+                    aria-label="Número do WhatsApp"
+                    aria-required="true">
+                <div class="error-message" id="phone-error" role="alert">WhatsApp inválido</div>
 
-            <div class="buttons">
-                <button class="btn-next" onclick="startQuiz()">Começar</button>
-            </div>
+                <div class="buttons">
+                    <button type="submit" class="btn-next" aria-label="Começar o quiz">Começar</button>
+                </div>
+            </form>
         </div>
 
         <!-- TELA DO QUIZ -->
         <div id="quiz-screen" class="hidden">
-            <div class="progress-bar">
+            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progresso do quiz">
                 <div class="progress-fill" id="progress"></div>
             </div>
-            <div class="progress-text" id="progress-text"></div>
+            <div class="progress-text" id="progress-text" aria-live="polite"></div>
 
             <div class="question-container">
-                <div class="question-number" id="question-number"></div>
-                <div class="question-text" id="question-text"></div>
-                <div class="options" id="options"></div>
+                <div class="question-number" id="question-number" aria-live="polite"></div>
+                <div class="question-text" id="question-text" role="heading" aria-level="2"></div>
+                <div class="options" id="options" role="group" aria-label="Opções de resposta"></div>
             </div>
 
             <div class="buttons">
-                <button class="btn-back" id="btn-back" onclick="previousQuestion()">← Voltar</button>
-                <button class="btn-next" id="btn-next" onclick="nextQuestion()">Próxima</button>
+                <button class="btn-back" id="btn-back" onclick="previousQuestion()" aria-label="Voltar para pergunta anterior">← Voltar</button>
+                <button class="btn-next" id="btn-next" onclick="nextQuestion()" aria-label="Próxima pergunta">Próxima</button>
             </div>
         </div>
 
         <!-- TELA DE LOADING -->
-        <div id="loading-screen" class="hidden">
+        <div id="loading-screen" class="hidden" role="status" aria-live="polite">
             <div class="loading-screen">
-                <div class="loading-spinner"></div>
+                <div class="loading-spinner" aria-hidden="true"></div>
                 <div class="loading-text" id="loading-text">Analisando suas respostas...</div>
                 <div class="loading-subtext">Encontrando o produto ideal para você</div>
             </div>
         </div>
 
         <!-- TELA DE RESULTADO -->
-        <div id="result-screen" class="hidden">
+        <div id="result-screen" class="hidden" role="region" aria-label="Resultado do quiz">
             <div class="result-container" id="result-content"></div>
             
             <div class="footer">
-                v1.1 • Quiz desenvolvido por João Carlos Chaves
+                v1.2 Expert • Desenvolvido por João Carlos Chaves
             </div>
         </div>
     </div>
@@ -661,25 +953,68 @@
     <script>
         'use strict';
 
-        // Google Analytics Events
+        // ========== PERFORMANCE OPTIMIZATION ==========
+        
+        // Passive event listeners
+        const passiveIfSupported = () => {
+            let passive = false;
+            try {
+                const options = {
+                    get passive() {
+                        passive = true;
+                        return false;
+                    }
+                };
+                window.addEventListener('test', null, options);
+                window.removeEventListener('test', null, options);
+            } catch (err) {
+                passive = false;
+            }
+            return passive ? { passive: true } : false;
+        };
+
+        // Intersection Observer para animações lazy
+        const animateOnScroll = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(animateOnScroll, {
+            threshold: 0.1,
+            rootMargin: '50px'
+        });
+
+        // ========== GOOGLE ANALYTICS ==========
+        
         function trackEvent(eventName, params = {}) {
-            if (typeof gtag !== 'undefined') {
-                gtag('event', eventName, params);
+            if (typeof ga !== 'undefined') {
+                ga('send', 'event', eventName, params);
             }
         }
 
         // ========== SEGURANÇA ==========
         
+        const DOMPurify = {
+            sanitize(str) {
+                const temp = document.createElement('div');
+                temp.textContent = str;
+                return temp.innerHTML
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#x27;')
+                    .replace(/\//g, '&#x2F;');
+            }
+        };
+
         function sanitizeInput(input) {
             if (typeof input !== 'string') return '';
-            const temp = document.createElement('div');
-            temp.textContent = input;
-            return temp.innerHTML
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#x27;')
-                .replace(/\//g, '&#x2F;');
+            return DOMPurify.sanitize(input);
         }
 
         function validateName(name) {
@@ -693,7 +1028,7 @@
         }
 
         function validatePhone(phone) {
-            if (!phone) return true;
+            if (!phone) return false;
             const regex = /^[\d\s\(\)\-\+]{10,20}$/;
             return regex.test(phone.trim());
         }
@@ -703,6 +1038,9 @@
             Object.keys(attributes).forEach(key => {
                 if (key === 'textContent') {
                     element.textContent = textContent;
+                } else if (key === 'innerHTML') {
+                    // Sanitizar HTML
+                    element.innerHTML = sanitizeInput(attributes[key]);
                 } else {
                     element.setAttribute(key, attributes[key]);
                 }
@@ -719,19 +1057,29 @@
                 currentQuestion,
                 timestamp: new Date().toISOString()
             };
-            localStorage.setItem('quizProgress', JSON.stringify(progressData));
+            try {
+                localStorage.setItem('quizProgress', JSON.stringify(progressData));
+            } catch (e) {
+                console.warn('LocalStorage não disponível:', e);
+            }
         }
 
         function loadProgress() {
-            const saved = localStorage.getItem('quizProgress');
-            if (saved) {
-                return JSON.parse(saved);
+            try {
+                const saved = localStorage.getItem('quizProgress');
+                return saved ? JSON.parse(saved) : null;
+            } catch (e) {
+                console.warn('Erro ao carregar progresso:', e);
+                return null;
             }
-            return null;
         }
 
         function clearProgress() {
-            localStorage.removeItem('quizProgress');
+            try {
+                localStorage.removeItem('quizProgress');
+            } catch (e) {
+                console.warn('Erro ao limpar progresso:', e);
+            }
         }
 
         // ========== DADOS ==========
@@ -751,7 +1099,7 @@
             mentoria: 0
         };
 
-        // PERGUNTAS
+        // PERGUNTAS (mantidas do código original)
         const questions = [
             {
                 id: 1,
@@ -1014,7 +1362,7 @@
             }
         ];
 
-        // PRODUTOS - 100% baseado nas páginas reais do Vinicius
+        // PRODUTOS (mantidos do código original)
         const products = {
             ppci: {
                 icon: "📚",
@@ -1162,6 +1510,7 @@
 
         // ========== INICIAR QUIZ ==========
         function startQuiz() {
+            // Limpar mensagens de erro
             document.getElementById('name-error').style.display = 'none';
             document.getElementById('email-error').style.display = 'none';
             document.getElementById('phone-error').style.display = 'none';
@@ -1170,20 +1519,33 @@
             const emailInput = document.getElementById('email').value;
             const phoneInput = document.getElementById('phone').value;
 
+            let hasError = false;
+
             if (!validateName(nameInput)) {
                 document.getElementById('name-error').style.display = 'block';
-                return;
+                document.getElementById('name').setAttribute('aria-invalid', 'true');
+                hasError = true;
+            } else {
+                document.getElementById('name').setAttribute('aria-invalid', 'false');
             }
 
             if (!validateEmail(emailInput)) {
                 document.getElementById('email-error').style.display = 'block';
-                return;
+                document.getElementById('email').setAttribute('aria-invalid', 'true');
+                hasError = true;
+            } else {
+                document.getElementById('email').setAttribute('aria-invalid', 'false');
             }
 
             if (!phoneInput || !validatePhone(phoneInput)) {
                 document.getElementById('phone-error').style.display = 'block';
-                return;
+                document.getElementById('phone').setAttribute('aria-invalid', 'true');
+                hasError = true;
+            } else {
+                document.getElementById('phone').setAttribute('aria-invalid', 'false');
             }
+
+            if (hasError) return;
 
             userData.name = sanitizeInput(nameInput.trim());
             userData.email = sanitizeInput(emailInput.trim().toLowerCase());
@@ -1205,9 +1567,11 @@
             const totalQuestions = questions.length;
 
             const progress = ((currentQuestion + 1) / totalQuestions) * 100;
-            document.getElementById('progress').style.width = progress + '%';
+            const progressBar = document.getElementById('progress');
+            progressBar.style.width = progress + '%';
+            progressBar.parentElement.setAttribute('aria-valuenow', Math.round(progress));
+            
             document.getElementById('progress-text').textContent = `Pergunta ${currentQuestion + 1} de ${totalQuestions}`;
-
             document.getElementById('question-number').textContent = `Pergunta ${currentQuestion + 1} de ${totalQuestions}`;
             document.getElementById('question-text').textContent = question.text;
 
@@ -1216,6 +1580,9 @@
 
             question.options.forEach((option, index) => {
                 const optionDiv = createSafeElement('div', { class: 'option' });
+                optionDiv.setAttribute('tabindex', '0');
+                optionDiv.setAttribute('role', question.type === 'single' ? 'radio' : 'checkbox');
+                optionDiv.setAttribute('aria-checked', 'false');
 
                 const inputType = question.type === 'single' ? 'radio' : 'checkbox';
                 const inputName = question.type === 'single' ? 'q' + question.id : 'q' + question.id + '_' + index;
@@ -1233,12 +1600,21 @@
                 if (isChecked) {
                     input.checked = true;
                     optionDiv.classList.add('selected');
+                    optionDiv.setAttribute('aria-checked', 'true');
                 }
 
-                input.addEventListener('change', () => selectOption(index, question.type, question.max || 999));
+                input.addEventListener('change', () => selectOption(index, question.type, question.max || 999), passiveIfSupported());
 
                 const label = createSafeElement('label', { for: 'opt_' + index });
                 label.textContent = option;
+
+                // Keyboard support
+                optionDiv.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        input.click();
+                    }
+                });
 
                 optionDiv.addEventListener('click', (e) => {
                     if (e.target === input || e.target === label) return;
@@ -1260,26 +1636,36 @@
         function selectOption(index, type, max) {
             if (type === 'single') {
                 answers[currentQuestion] = index;
-                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-                document.querySelectorAll('.option')[index].classList.add('selected');
+                const options = document.querySelectorAll('.option');
+                options.forEach((opt, i) => {
+                    opt.classList.remove('selected');
+                    opt.setAttribute('aria-checked', 'false');
+                    if (i === index) {
+                        opt.classList.add('selected');
+                        opt.setAttribute('aria-checked', 'true');
+                    }
+                });
             } else {
                 if (!answers[currentQuestion]) {
                     answers[currentQuestion] = [];
                 }
 
                 const checkbox = document.getElementById('opt_' + index);
+                const optionDiv = document.querySelectorAll('.option')[index];
                 
                 if (checkbox.checked) {
                     if (answers[currentQuestion].length < max) {
                         answers[currentQuestion].push(index);
-                        document.querySelectorAll('.option')[index].classList.add('selected');
+                        optionDiv.classList.add('selected');
+                        optionDiv.setAttribute('aria-checked', 'true');
                     } else {
                         checkbox.checked = false;
                         alert(`Máximo ${max} ${max === 1 ? 'opção' : 'opções'}.`);
                     }
                 } else {
                     answers[currentQuestion] = answers[currentQuestion].filter(i => i !== index);
-                    document.querySelectorAll('.option')[index].classList.remove('selected');
+                    optionDiv.classList.remove('selected');
+                    optionDiv.setAttribute('aria-checked', 'false');
                 }
             }
 
@@ -1393,6 +1779,7 @@
 
             const iconDiv = createSafeElement('div', { class: 'result-icon' });
             iconDiv.textContent = product.icon;
+            iconDiv.setAttribute('aria-hidden', 'true');
 
             const title1 = createSafeElement('h2', { class: 'result-title' });
             title1.textContent = 'Produto ideal para você:';
@@ -1480,17 +1867,13 @@
                 rel: 'noopener noreferrer'
             });
             ctaLink.textContent = productKey === 'mentoria' ? 'APLICAR PARA MENTORIA' : 'QUERO COMEÇAR AGORA';
+            ctaLink.setAttribute('aria-label', `Ir para página de ${product.title}`);
             ctaLink.addEventListener('click', () => {
                 trackEvent('product_cta_clicked', {
                     product: productKey,
                     user_email: userData.email
                 });
             });
-
-            const note = createSafeElement('p', { class: 'note' });
-            note.textContent = productKey === 'mentoria' 
-                ? 'Vagas limitadas. Preencha o formulário e o Vinicius entrará em contato.' 
-                : 'Acesso vitalício ao conteúdo + comunidade exclusiva de engenheiros.';
 
             // Links sociais do Vinicius
             const socialContact = createSafeElement('div', { class: 'social-contact' });
@@ -1508,6 +1891,7 @@
                 rel: 'noopener noreferrer'
             });
             linkedinLink.innerHTML = '🔗 LinkedIn';
+            linkedinLink.setAttribute('aria-label', 'Perfil do LinkedIn de Vinicius Figueiredo');
             
             // Instagram
             const instagramLink = createSafeElement('a', { 
@@ -1517,6 +1901,7 @@
                 rel: 'noopener noreferrer'
             });
             instagramLink.innerHTML = '📸 Instagram';
+            instagramLink.setAttribute('aria-label', 'Perfil do Instagram de Vinicius Figueiredo');
             
             // YouTube
             const youtubeLink = createSafeElement('a', { 
@@ -1526,11 +1911,17 @@
                 rel: 'noopener noreferrer'
             });
             youtubeLink.innerHTML = '▶️ YouTube';
+            youtubeLink.setAttribute('aria-label', 'Canal do YouTube de Vinicius Figueiredo');
             
             socialLinks.appendChild(linkedinLink);
             socialLinks.appendChild(instagramLink);
             socialLinks.appendChild(youtubeLink);
             socialContact.appendChild(socialLinks);
+
+            const note = createSafeElement('p', { class: 'note' });
+            note.textContent = productKey === 'mentoria' 
+                ? 'Vagas limitadas. Preencha o formulário e o Vinicius entrará em contato.' 
+                : 'Acesso vitalício ao conteúdo + comunidade exclusiva de engenheiros.';
 
             resultContainer.appendChild(iconDiv);
             resultContainer.appendChild(title1);
