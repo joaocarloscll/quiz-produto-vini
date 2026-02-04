@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://www.google-analytics.com;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
-    <title>Quiz - Qual produto é ideal para você? | Vinicius Figueiredo</title>
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="description" content="Descubra qual produto de engenharia é ideal para você. Teste personalizado com recomendação baseada no seu perfil profissional.">
+    <title>Descubra qual produto é ideal para você | Vinicius Figueiredo</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -14,15 +26,25 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --color-ppci: #667eea;
+            --color-avcb: #48bb78;
+            --color-escritorio: #ed8936;
+            --color-mentoria: #9f7aea;
+            --color-primary: #667eea;
+            --color-dark: #2d3748;
+            --color-gray: #718096;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            transition: background 0.5s ease;
         }
 
         .container {
@@ -56,8 +78,17 @@
         .subtitle {
             color: #718096;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .time-estimate {
+            text-align: center;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 30px;
         }
 
         .progress-bar {
@@ -65,15 +96,23 @@
             height: 8px;
             background: #e2e8f0;
             border-radius: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, var(--color-primary) 0%, #764ba2 100%);
             border-radius: 10px;
             transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 600;
         }
 
         .question-container {
@@ -81,7 +120,7 @@
         }
 
         .question-number {
-            color: #667eea;
+            color: var(--color-primary);
             font-weight: 600;
             font-size: 14px;
             margin-bottom: 10px;
@@ -107,25 +146,21 @@
             border-radius: 12px;
             padding: 16px 20px;
             cursor: pointer;
-            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
-            touch-action: manipulation;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 12px;
+            user-select: none;
         }
 
         .option:hover {
-            border-color: #667eea;
+            border-color: var(--color-primary);
             background: #edf2f7;
             transform: translateX(5px);
         }
 
         .option.selected {
-            border-color: #667eea;
-            background: #e6effb;
-        }
-
-        .option.selected:hover {
+            border-color: var(--color-primary);
             background: #e6effb;
         }
 
@@ -134,6 +169,7 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .option label {
@@ -181,11 +217,10 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            touch-action: manipulation;
         }
 
         .btn-next {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
             color: white;
         }
 
@@ -209,6 +244,39 @@
             background: #cbd5e0;
         }
 
+        /* LOADING SCREEN */
+        .loading-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #e2e8f0;
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        /* RESULTADO */
         .result-container {
             text-align: center;
         }
@@ -240,7 +308,7 @@
         }
 
         .result-box h3 {
-            color: #667eea;
+            color: var(--color-primary);
             margin-bottom: 15px;
             font-size: 18px;
         }
@@ -263,6 +331,66 @@
             left: 0;
             color: #48bb78;
             font-weight: bold;
+        }
+
+        .profile-summary {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-summary h4 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .profile-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .profile-item strong {
+            min-width: 140px;
+            color: #2d3748;
+        }
+
+        .timeline {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .timeline h4 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .timeline-week {
+            min-width: 90px;
+            font-weight: 600;
+            color: var(--color-primary);
+            font-size: 14px;
+        }
+
+        .timeline-desc {
+            color: #4a5568;
+            font-size: 14px;
         }
 
         .price {
@@ -294,70 +422,75 @@
             font-size: 14px;
             color: #718096;
             margin-top: 20px;
-            font-style: italic;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .welcome-back {
+            background: #e6fffa;
+            border: 2px solid #81e6d9;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .welcome-back-text {
+            color: #234e52;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .welcome-back-btn {
+            background: #38b2ac;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .welcome-back-btn:hover {
+            background: #319795;
         }
 
         .hidden {
             display: none;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px;
-            }
-
-            .result-box {
-                padding: 20px;
-            }
-        }
-
         @media (max-width: 600px) {
             .container {
-                padding: 20px;
+                padding: 25px;
             }
 
             h1 {
-                font-size: 22px;
+                font-size: 24px;
             }
 
             .question-text {
-                font-size: 17px;
-            }
-
-            .option {
-                padding: 14px 16px;
-            }
-
-            .input-field {
-                font-size: 16px;
-            }
-
-            .buttons {
-                flex-direction: column-reverse;
-                gap: 10px;
+                font-size: 18px;
             }
 
             .result-title {
-                font-size: 24px;
+                font-size: 26px;
             }
 
-            .result-icon {
-                font-size: 48px;
+            .timeline-item {
+                flex-direction: column;
+                gap: 5px;
             }
 
-            .price {
-                font-size: 24px;
-            }
-
-            .result-box {
-                padding: 18px;
-            }
-
-            .cta-button {
-                display: block;
-                width: 100%;
-                text-align: center;
-                padding: 16px 20px;
+            .timeline-week {
+                min-width: auto;
             }
         }
     </style>
@@ -366,22 +499,31 @@
     <div class="container">
         <!-- TELA INICIAL -->
         <div id="welcome-screen">
-            <h1>🎯 Descubra qual produto é ideal para você!</h1>
-            <p class="subtitle">Responda este quiz rápido (3-5 minutos) e receba uma recomendação personalizada baseada no seu perfil e objetivos.</p>
+            <h1>Descubra qual produto é ideal para você</h1>
+            <p class="subtitle">
+                Responda 15 perguntas práticas e receba uma recomendação personalizada baseada no seu momento profissional.
+            </p>
+            <p class="time-estimate">Leva apenas 3 minutos</p>
+            
+            <!-- Welcome Back -->
+            <div id="welcome-back-banner" class="welcome-back hidden">
+                <div class="welcome-back-text">Bem-vindo de volta! Você estava na pergunta <span id="saved-question"></span>.</div>
+                <button class="welcome-back-btn" onclick="continueFromSaved()">Continuar</button>
+                <button class="welcome-back-btn" style="background: #cbd5e0; color: #4a5568; margin-left: 10px;" onclick="startFresh()">Recomeçar</button>
+            </div>
             
             <div style="margin-top: 30px;">
-                <input type="text" id="name" class="input-field" placeholder="Seu nome completo *" required maxlength="100">
-                <div class="error-message" id="name-error">Por favor, insira um nome válido (apenas letras e espaços).</div>
+                <input type="text" id="name" class="input-field" placeholder="Nome completo" required maxlength="100">
+                <div class="error-message" id="name-error">Nome inválido</div>
                 
-                <input type="email" id="email" class="input-field" placeholder="Seu e-mail *" required maxlength="100">
-                <div class="error-message" id="email-error">Por favor, insira um e-mail válido.</div>
+                <input type="email" id="email" class="input-field" placeholder="E-mail" required maxlength="100">
+                <div class="error-message" id="email-error">E-mail inválido</div>
                 
                 <input type="tel" id="phone" class="input-field" placeholder="WhatsApp (opcional)" maxlength="20">
-                <div class="error-message" id="phone-error">Por favor, insira um número de telefone válido.</div>
             </div>
 
             <div class="buttons">
-                <button class="btn-next" onclick="startQuiz()">Começar Quiz →</button>
+                <button class="btn-next" onclick="startQuiz()">Começar</button>
             </div>
         </div>
 
@@ -390,6 +532,7 @@
             <div class="progress-bar">
                 <div class="progress-fill" id="progress"></div>
             </div>
+            <div class="progress-text" id="progress-text"></div>
 
             <div class="question-container">
                 <div class="question-number" id="question-number"></div>
@@ -399,84 +542,115 @@
 
             <div class="buttons">
                 <button class="btn-back" id="btn-back" onclick="previousQuestion()">← Voltar</button>
-                <button class="btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
+                <button class="btn-next" id="btn-next" onclick="nextQuestion()">Próxima</button>
+            </div>
+        </div>
+
+        <!-- TELA DE LOADING -->
+        <div id="loading-screen" class="hidden">
+            <div class="loading-screen">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" id="loading-text">Analisando suas respostas...</div>
+                <div class="loading-subtext">Encontrando o produto ideal para você</div>
             </div>
         </div>
 
         <!-- TELA DE RESULTADO -->
         <div id="result-screen" class="hidden">
             <div class="result-container" id="result-content"></div>
+            
+            <div class="footer">
+                v1.1 • Quiz desenvolvido por João Carlos Chaves
+            </div>
         </div>
     </div>
 
     <script>
         'use strict';
 
-        // ========== FUNÇÕES DE SEGURANÇA ==========
+        // Google Analytics Events
+        function trackEvent(eventName, params = {}) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, params);
+            }
+        }
+
+        // ========== SEGURANÇA ==========
         
-        /**
-         * Sanitiza string para prevenir XSS
-         * Remove tags HTML e caracteres perigosos
-         */
         function sanitizeInput(input) {
             if (typeof input !== 'string') return '';
-            
             const temp = document.createElement('div');
             temp.textContent = input;
             return temp.innerHTML
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#x27;')
                 .replace(/\//g, '&#x2F;');
         }
 
-        /**
-         * Valida nome (apenas letras, espaços, acentos)
-         */
         function validateName(name) {
             const regex = /^[a-zA-ZÀ-ÿ\s]{2,100}$/;
             return regex.test(name.trim());
         }
 
-        /**
-         * Valida email
-         */
         function validateEmail(email) {
             const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
             return regex.test(email.trim()) && email.length <= 100;
         }
 
-        /**
-         * Valida telefone (formato brasileiro)
-         */
         function validatePhone(phone) {
-            if (!phone) return true; // Opcional
+            if (!phone) return true;
             const regex = /^[\d\s\(\)\-\+]{10,20}$/;
             return regex.test(phone.trim());
         }
 
-        /**
-         * Cria elemento de forma segura
-         */
-        function createSafeElement(tag, attributes = {}) {
+        function createSafeElement(tag, attributes = {}, textContent = '') {
             const element = document.createElement(tag);
             Object.keys(attributes).forEach(key => {
-                element.setAttribute(key, attributes[key]);
+                if (key === 'textContent') {
+                    element.textContent = textContent;
+                } else {
+                    element.setAttribute(key, attributes[key]);
+                }
             });
             return element;
         }
 
-        // ========== DADOS DO USUÁRIO ==========
+        // ========== SALVAMENTO DE PROGRESSO ==========
+        
+        function saveProgress() {
+            const progressData = {
+                userData,
+                answers,
+                currentQuestion,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('quizProgress', JSON.stringify(progressData));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('quizProgress');
+            if (saved) {
+                return JSON.parse(saved);
+            }
+            return null;
+        }
+
+        function clearProgress() {
+            localStorage.removeItem('quizProgress');
+        }
+
+        // ========== DADOS ==========
         let userData = {
             name: '',
             email: '',
             phone: ''
         };
 
-        // RESPOSTAS
         let answers = [];
         let currentQuestion = 0;
 
-        // PONTUAÇÃO
         let scores = {
             ppci: 0,
             avcb: 0,
@@ -501,10 +675,10 @@
             },
             {
                 id: 2,
-                text: "Há quanto tempo você atua (ou pretende atuar) na área?",
+                text: "Qual é a sua experiência na área de engenharia?",
                 type: "single",
                 options: [
-                    "Ainda estou estudando",
+                    "Ainda estou estudando (sem experiência profissional)",
                     "Menos de 1 ano de formado",
                     "1 a 3 anos de experiência",
                     "3 a 5 anos de experiência",
@@ -747,69 +921,91 @@
             }
         ];
 
-        // PRODUTOS
+        // PRODUTOS - 100% baseado nas páginas reais do Vinicius
         const products = {
             ppci: {
                 icon: "📚",
                 title: "PPCI do Zero ao Aprovado",
-                subtitle: "Domine a parte técnica de projetos de incêndio",
+                subtitle: "Do zero à aprovação, passo a passo na prática",
+                color: "#667eea",
                 reasons: [
-                    "Você quer aprender uma habilidade técnica lucrativa",
-                    "Precisa de conhecimento em PPCI para crescer",
-                    "Prefere aprender fazendo (hands-on)"
+                    "Você quer dominar projetos de PPCI com segurança",
+                    "Precisa aprender fazendo (passo a passo prático)",
+                    "Busca uma habilidade técnica lucrativa"
                 ],
                 price: "R$ 599,90",
                 benefits: [
-                    "7 aulas completas (1h30 cada)",
-                    "Projeto do zero à aprovação (passo a passo)",
-                    "Planilhas e templates prontos",
-                    "Comunidade exclusiva no WhatsApp"
+                    "7 aulas completas (aprox. 1h30 cada)",
+                    "Todos os itens para aprovar um PPCI",
+                    "Templates, planilhas e checklists prontos",
+                    "Comunidade exclusiva de engenheiros"
                 ],
-                link: "https://chk.eduzz.com/D0RADEYJ9Y"
+                link: "https://chk.eduzz.com/D0RADEYJ9Y",
+                timeline: [
+                    { week: "Semana 1-2", desc: "Estudar o curso completo e dominar a metodologia" },
+                    { week: "Semana 3-4", desc: "Executar primeiro projeto do zero" },
+                    { week: "Semana 5-8", desc: "Captar primeiros clientes" },
+                    { week: "Semana 9-12", desc: "Faturar R$ 3-5k nos primeiros projetos" }
+                ]
             },
             avcb: {
                 icon: "🎯",
                 title: "Guia AVCB, CLCB e Laudos",
-                subtitle: "Serviço de entrada rápida e receita recorrente",
+                subtitle: "Construa uma base recorrente de faturamento",
+                color: "#48bb78",
                 reasons: [
                     "Você quer gerar renda extra rapidamente",
-                    "Precisa de faturamento recorrente (sem instabilidade)",
-                    "Meta de R$ 2-10k/mês está alinhada"
+                    "Precisa de faturamento recorrente e previsível",
+                    "Meta de R$ 2-10k/mês está alinhada com AVCB"
                 ],
                 price: "R$ 349,90",
                 benefits: [
-                    "4 aulas completas sobre AVCB/CLCB",
-                    "Modelos de laudos prontos para usar",
-                    "Fluxo completo do serviço (início ao fim)",
-                    "Comunidade exclusiva no WhatsApp"
+                    "4 aulas práticas completas",
+                    "Modelos validados de laudos técnicos",
+                    "Planilha de precificação completa",
+                    "Comunidade exclusiva de engenheiros"
                 ],
-                link: "https://chk.eduzz.com/7977R77A9E"
+                link: "https://chk.eduzz.com/7977R77A9E",
+                timeline: [
+                    { week: "Semana 1-2", desc: "Estudar curso e modelos de laudos" },
+                    { week: "Semana 3-4", desc: "Prospectar primeiras empresas" },
+                    { week: "Semana 5-8", desc: "Fechar primeiros contratos recorrentes" },
+                    { week: "Semana 9-12", desc: "Base consolidada de R$ 2-5k/mês" }
+                ]
             },
             escritorio: {
                 icon: "🏢",
                 title: "Construindo um Escritório Lucrativo",
-                subtitle: "Estruture ou cresça seu negócio de forma profissional",
+                subtitle: "Estruture e opere um negócio de engenharia com método",
+                color: "#ed8936",
                 reasons: [
-                    "Você quer abrir ou organizar um escritório",
+                    "Você quer abrir ou organizar seu escritório",
                     "Precisa captar clientes de forma consistente",
                     "Necessita de processos, precificação e organização"
                 ],
                 price: "R$ 499,90",
                 benefits: [
-                    "4 aulas completas (passo a passo comercial)",
-                    "Mapa mental com planilhas e modelos prontos",
-                    "Estratégias de captação e vendas validadas",
-                    "Comunidade exclusiva no WhatsApp"
+                    "4 aulas práticas (do zero ao operacional)",
+                    "Planilhas de gestão e precificação",
+                    "Modelos de proposta e contrato prontos",
+                    "Comunidade exclusiva de engenheiros"
                 ],
-                link: "https://chk.eduzz.com/Q9N5KOBD01"
+                link: "https://chk.eduzz.com/Q9N5KOBD01",
+                timeline: [
+                    { week: "Semana 1-2", desc: "Definir posicionamento e estrutura" },
+                    { week: "Semana 3-4", desc: "Implementar sistema de captação" },
+                    { week: "Semana 5-8", desc: "Fechar primeiros contratos" },
+                    { week: "Semana 9-12", desc: "Alcançar R$ 10-15k/mês de faturamento" }
+                ]
             },
             mentoria: {
                 icon: "👨‍🏫",
                 title: "Mentoria Individual",
-                subtitle: "Direcionamento personalizado para sua situação",
+                subtitle: "Direcionamento personalizado 1:1",
+                color: "#9f7aea",
                 reasons: [
                     "Falta direcionamento estratégico claro",
-                    "Você quer acelerar resultados com orientação 1:1",
+                    "Você quer acelerar resultados com orientação direta",
                     "Precisa de consultoria personalizada para seu caso"
                 ],
                 price: "R$ 1.000 ou R$ 1.800",
@@ -817,73 +1013,110 @@
                     "Reuniões 1:1 com Vinicius Figueiredo",
                     "Acesso gratuito a um dos cursos",
                     "WhatsApp direto por 3 meses",
-                    "Materiais exclusivos (planilhas, modelos)"
+                    "Materiais exclusivos personalizados"
                 ],
-                link: "https://forms.gle/L3uYHSGFArMjrHyw6"
+                link: "https://forms.gle/L3uYHSGFArMjrHyw6",
+                timeline: [
+                    { week: "Semana 1-2", desc: "Diagnóstico completo e plano personalizado" },
+                    { week: "Semana 3-4", desc: "Implementação guiada passo a passo" },
+                    { week: "Semana 5-8", desc: "Ajustes e otimizações com acompanhamento" },
+                    { week: "Semana 9-12", desc: "Resultados mensuráveis alcançados" }
+                ]
             }
         };
 
-        // ========== FUNÇÕES DO QUIZ ==========
+        // ========== VERIFICAR PROGRESSO SALVO ==========
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedProgress = loadProgress();
+            if (savedProgress) {
+                const questionNum = savedProgress.currentQuestion + 1;
+                document.getElementById('saved-question').textContent = questionNum;
+                document.getElementById('welcome-back-banner').classList.remove('hidden');
+            }
+        });
 
-        /**
-         * INICIAR QUIZ (com validação de segurança)
-         */
+        function continueFromSaved() {
+            const savedProgress = loadProgress();
+            if (savedProgress) {
+                userData = savedProgress.userData;
+                answers = savedProgress.answers;
+                currentQuestion = savedProgress.currentQuestion;
+                
+                document.getElementById('name').value = userData.name;
+                document.getElementById('email').value = userData.email;
+                document.getElementById('phone').value = userData.phone || '';
+                
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('hidden');
+                
+                showQuestion();
+                
+                trackEvent('quiz_continued', {
+                    question_number: currentQuestion + 1
+                });
+            }
+        }
+
+        function startFresh() {
+            clearProgress();
+            document.getElementById('welcome-back-banner').classList.add('hidden');
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            answers = [];
+            currentQuestion = 0;
+        }
+
+        // ========== INICIAR QUIZ ==========
         function startQuiz() {
-            // Limpar mensagens de erro
             document.getElementById('name-error').style.display = 'none';
             document.getElementById('email-error').style.display = 'none';
-            document.getElementById('phone-error').style.display = 'none';
 
             const nameInput = document.getElementById('name').value;
             const emailInput = document.getElementById('email').value;
             const phoneInput = document.getElementById('phone').value;
 
-            // Validar nome
             if (!validateName(nameInput)) {
                 document.getElementById('name-error').style.display = 'block';
                 return;
             }
 
-            // Validar email
             if (!validateEmail(emailInput)) {
                 document.getElementById('email-error').style.display = 'block';
                 return;
             }
 
-            // Validar telefone (se preenchido)
             if (phoneInput && !validatePhone(phoneInput)) {
-                document.getElementById('phone-error').style.display = 'block';
+                alert('Número de telefone inválido.');
                 return;
             }
 
-            // Sanitizar e armazenar dados
             userData.name = sanitizeInput(nameInput.trim());
             userData.email = sanitizeInput(emailInput.trim().toLowerCase());
             userData.phone = sanitizeInput(phoneInput.trim());
 
-            // Prosseguir
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
 
             showQuestion();
+            
+            trackEvent('quiz_started', {
+                user_email: userData.email
+            });
         }
 
-        /**
-         * MOSTRAR PERGUNTA
-         */
+        // ========== MOSTRAR PERGUNTA ==========
         function showQuestion() {
             const question = questions[currentQuestion];
             const totalQuestions = questions.length;
 
-            // Atualizar progresso
             const progress = ((currentQuestion + 1) / totalQuestions) * 100;
             document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `Pergunta ${currentQuestion + 1} de ${totalQuestions}`;
 
-            // Atualizar texto (usando textContent para evitar XSS)
             document.getElementById('question-number').textContent = `Pergunta ${currentQuestion + 1} de ${totalQuestions}`;
             document.getElementById('question-text').textContent = question.text;
 
-            // Criar opções de forma segura
             const optionsContainer = document.getElementById('options');
             optionsContainer.innerHTML = '';
 
@@ -893,7 +1126,6 @@
                 const inputType = question.type === 'single' ? 'radio' : 'checkbox';
                 const inputName = question.type === 'single' ? 'q' + question.id : 'q' + question.id + '_' + index;
 
-                // Verificar se já foi respondida
                 const isChecked = answers[currentQuestion] && 
                     (question.type === 'single' ? answers[currentQuestion] === index : answers[currentQuestion].includes(index));
 
@@ -914,37 +1146,29 @@
                 const label = createSafeElement('label', { for: 'opt_' + index });
                 label.textContent = option;
 
-                optionDiv.appendChild(input);
-                optionDiv.appendChild(label);
-
                 optionDiv.addEventListener('click', (e) => {
-                    if (e.target !== input && e.target !== label) {
-                        input.click();
-                    }
+                    if (e.target === input || e.target === label) return;
+                    input.click();
                 });
 
+                optionDiv.appendChild(input);
+                optionDiv.appendChild(label);
                 optionsContainer.appendChild(optionDiv);
             });
 
-            // Botões
             document.getElementById('btn-back').style.display = currentQuestion === 0 ? 'none' : 'block';
-            document.getElementById('btn-next').textContent = currentQuestion === totalQuestions - 1 ? 'Ver Resultado →' : 'Próxima →';
+            document.getElementById('btn-next').textContent = currentQuestion === totalQuestions - 1 ? 'Ver Resultado' : 'Próxima';
 
             updateNextButton();
+            saveProgress();
         }
 
-        /**
-         * SELECIONAR OPÇÃO
-         */
         function selectOption(index, type, max) {
             if (type === 'single') {
                 answers[currentQuestion] = index;
-
-                // Atualizar visual
                 document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
                 document.querySelectorAll('.option')[index].classList.add('selected');
             } else {
-                // Multiple choice
                 if (!answers[currentQuestion]) {
                     answers[currentQuestion] = [];
                 }
@@ -957,7 +1181,7 @@
                         document.querySelectorAll('.option')[index].classList.add('selected');
                     } else {
                         checkbox.checked = false;
-                        alert(`Você pode selecionar no máximo ${max} ${max === 1 ? 'opção' : 'opções'}.`);
+                        alert(`Máximo ${max} ${max === 1 ? 'opção' : 'opções'}.`);
                     }
                 } else {
                     answers[currentQuestion] = answers[currentQuestion].filter(i => i !== index);
@@ -966,11 +1190,9 @@
             }
 
             updateNextButton();
+            saveProgress();
         }
 
-        /**
-         * ATUALIZAR BOTÃO PRÓXIMA
-         */
         function updateNextButton() {
             const question = questions[currentQuestion];
             const hasAnswer = answers[currentQuestion] !== undefined && 
@@ -979,21 +1201,19 @@
             document.getElementById('btn-next').disabled = !hasAnswer;
         }
 
-        /**
-         * PRÓXIMA PERGUNTA
-         */
         function nextQuestion() {
             if (currentQuestion < questions.length - 1) {
                 currentQuestion++;
                 showQuestion();
+                
+                trackEvent('quiz_question_answered', {
+                    question_number: currentQuestion
+                });
             } else {
-                calculateResult();
+                showLoadingScreen();
             }
         }
 
-        /**
-         * PERGUNTA ANTERIOR
-         */
         function previousQuestion() {
             if (currentQuestion > 0) {
                 currentQuestion--;
@@ -1001,14 +1221,33 @@
             }
         }
 
-        /**
-         * CALCULAR RESULTADO
-         */
+        // ========== TELA DE LOADING ==========
+        function showLoadingScreen() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('loading-screen').classList.remove('hidden');
+
+            const loadingTexts = [
+                "Analisando suas respostas...",
+                "Calculando compatibilidade...",
+                "Encontrando o produto ideal..."
+            ];
+
+            let textIndex = 0;
+            const interval = setInterval(() => {
+                textIndex = (textIndex + 1) % loadingTexts.length;
+                document.getElementById('loading-text').textContent = loadingTexts[textIndex];
+            }, 800);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                calculateResult();
+            }, 2500);
+        }
+
+        // ========== CALCULAR RESULTADO ==========
         function calculateResult() {
-            // Resetar scores
             scores = { ppci: 0, avcb: 0, escritorio: 0, mentoria: 0 };
 
-            // Calcular pontuação
             questions.forEach((question, qIndex) => {
                 if (question.scoring) {
                     const answer = answers[qIndex];
@@ -1033,50 +1272,68 @@
                 }
             });
 
-            // Determinar produto vencedor
-            let winner = 'ppci';
-            let maxScore = scores.ppci;
-
-            Object.keys(scores).forEach(key => {
-                if (scores[key] > maxScore) {
-                    maxScore = scores[key];
-                    winner = key;
-                }
-            });
+            const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+            const winner = sortedScores[0][0];
 
             showResult(winner);
+            clearProgress();
+            
+            trackEvent('quiz_completed', {
+                recommended_product: winner,
+                user_email: userData.email
+            });
         }
 
-        /**
-         * MOSTRAR RESULTADO (de forma segura)
-         */
+        // ========== MOSTRAR RESULTADO ==========
         function showResult(productKey) {
             const product = products[productKey];
 
-            document.getElementById('quiz-screen').classList.add('hidden');
+            document.documentElement.style.setProperty('--color-primary', product.color);
+            document.body.style.background = `linear-gradient(135deg, ${product.color} 0%, #764ba2 100%)`;
+
+            document.getElementById('loading-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
 
             const resultContainer = document.getElementById('result-content');
-            resultContainer.innerHTML = ''; // Limpar
+            resultContainer.innerHTML = '';
 
-            // Criar elementos de forma segura
             const iconDiv = createSafeElement('div', { class: 'result-icon' });
             iconDiv.textContent = product.icon;
 
             const title1 = createSafeElement('h2', { class: 'result-title' });
-            title1.textContent = 'Seu produto ideal:';
+            title1.textContent = 'Produto ideal para você:';
 
             const title2 = createSafeElement('h1', { class: 'result-title' });
-            title2.style.color = '#667eea';
+            title2.style.color = product.color;
             title2.textContent = product.title;
 
             const subtitle = createSafeElement('p', { class: 'result-subtitle' });
             subtitle.textContent = product.subtitle;
 
-            // Box de razões
+            const profileSummary = createSafeElement('div', { class: 'profile-summary' });
+            const profileTitle = createSafeElement('h4');
+            profileTitle.textContent = 'Seu Perfil:';
+            profileSummary.appendChild(profileTitle);
+
+            const profileData = [
+                { label: 'Situação:', value: questions[0].options[answers[0]] },
+                { label: 'Experiência:', value: questions[1].options[answers[1]] },
+                { label: 'Objetivo:', value: questions[6].options[answers[6]] },
+                { label: 'Meta:', value: questions[8].options[answers[8]] }
+            ];
+
+            profileData.forEach(item => {
+                const profileItem = createSafeElement('div', { class: 'profile-item' });
+                const strong = createSafeElement('strong');
+                strong.textContent = item.label;
+                profileItem.appendChild(strong);
+                profileItem.appendChild(document.createTextNode(' ' + item.value));
+                profileSummary.appendChild(profileItem);
+            });
+
             const reasonsBox = createSafeElement('div', { class: 'result-box' });
             const reasonsTitle = createSafeElement('h3');
-            reasonsTitle.textContent = '✅ Por que é ideal para você:';
+            reasonsTitle.textContent = 'Por que este produto:';
             reasonsBox.appendChild(reasonsTitle);
 
             const reasonsList = createSafeElement('ul');
@@ -1087,14 +1344,31 @@
             });
             reasonsBox.appendChild(reasonsList);
 
-            // Preço
+            const timeline = createSafeElement('div', { class: 'timeline' });
+            const timelineTitle = createSafeElement('h4');
+            timelineTitle.textContent = 'Próximos 90 dias (na prática):';
+            timeline.appendChild(timelineTitle);
+
+            product.timeline.forEach(item => {
+                const timelineItem = createSafeElement('div', { class: 'timeline-item' });
+                
+                const week = createSafeElement('div', { class: 'timeline-week' });
+                week.textContent = item.week;
+                
+                const desc = createSafeElement('div', { class: 'timeline-desc' });
+                desc.textContent = item.desc;
+                
+                timelineItem.appendChild(week);
+                timelineItem.appendChild(desc);
+                timeline.appendChild(timelineItem);
+            });
+
             const priceDiv = createSafeElement('div', { class: 'price' });
             priceDiv.textContent = product.price;
 
-            // Box de benefícios
             const benefitsBox = createSafeElement('div', { class: 'result-box' });
             const benefitsTitle = createSafeElement('h3');
-            benefitsTitle.textContent = '📦 O que você recebe:';
+            benefitsTitle.textContent = 'Tudo o que você recebe:';
             benefitsBox.appendChild(benefitsTitle);
 
             const benefitsList = createSafeElement('ul');
@@ -1105,27 +1379,32 @@
             });
             benefitsBox.appendChild(benefitsList);
 
-            // CTA
             const ctaLink = createSafeElement('a', { 
                 href: product.link,
                 class: 'cta-button',
                 target: '_blank',
-                rel: 'noopener noreferrer' // Segurança contra tabnabbing
+                rel: 'noopener noreferrer'
             });
-            ctaLink.textContent = productKey === 'mentoria' ? 'QUERO APLICAR PARA MENTORIA' : 'QUERO COMPRAR AGORA';
+            ctaLink.textContent = productKey === 'mentoria' ? 'APLICAR PARA MENTORIA' : 'QUERO COMEÇAR AGORA';
+            ctaLink.addEventListener('click', () => {
+                trackEvent('product_cta_clicked', {
+                    product: productKey,
+                    user_email: userData.email
+                });
+            });
 
-            // Nota
             const note = createSafeElement('p', { class: 'note' });
             note.textContent = productKey === 'mentoria' 
-                ? 'A mentoria tem vagas limitadas. Preencha o formulário e o Vinicius entrará em contato.' 
-                : 'Tem dúvidas? Entre em contato com o Vinicius no LinkedIn ou Instagram.';
+                ? 'Vagas limitadas. Preencha o formulário e o Vinicius entrará em contato.' 
+                : 'Acesso vitalício ao conteúdo + comunidade exclusiva de engenheiros.';
 
-            // Adicionar tudo ao container
             resultContainer.appendChild(iconDiv);
             resultContainer.appendChild(title1);
             resultContainer.appendChild(title2);
             resultContainer.appendChild(subtitle);
+            resultContainer.appendChild(profileSummary);
             resultContainer.appendChild(reasonsBox);
+            resultContainer.appendChild(timeline);
             resultContainer.appendChild(priceDiv);
             resultContainer.appendChild(benefitsBox);
             resultContainer.appendChild(ctaLink);
