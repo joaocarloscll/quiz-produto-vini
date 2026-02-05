@@ -419,32 +419,35 @@
             position: absolute;
             inset: 0;
             background: rgba(255,255,255,0.2);
-            transform: translateX(-100%);
-            transition: transform var(--transition-base);
+            transform: translateX(-100%) skewX(-15deg);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         button:hover::before {
-            transform: translateX(0);
+            transform: translateX(100%) skewX(-15deg);
         }
 
         .btn-next {
             background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
             color: var(--color-white);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .btn-next:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
         }
 
         .btn-next:active:not(:disabled) {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .btn-next:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .btn-back {
@@ -454,6 +457,12 @@
 
         .btn-back:hover {
             background: #cbd5e0;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-back:active {
+            transform: translateY(0) scale(0.98);
         }
 
         /* Loading screen otimizado */
@@ -555,72 +564,135 @@
             font-size: var(--font-md);
         }
 
-        /* Profile summary com Grid */
+        /* Profile summary com Grid moderno */
         .profile-summary {
-            background: var(--color-white);
-            border: 2px solid var(--color-light-gray);
-            border-radius: var(--radius-md);
-            padding: var(--space-lg);
-            margin-bottom: var(--space-lg);
-        }
-
-        .profile-summary h4 {
-            color: var(--color-dark);
-            margin-bottom: var(--space-md);
-            font-size: var(--font-base);
-        }
-
-        .profile-item {
-            display: grid;
-            grid-template-columns: minmax(120px, auto) 1fr;
-            gap: var(--space-sm);
-            margin-bottom: var(--space-sm);
-            font-size: var(--font-sm);
-            color: #4a5568;
-            align-items: start;
-        }
-
-        .profile-item strong {
-            color: var(--color-dark);
-        }
-
-        /* Timeline com Flexbox */
-        .timeline {
-            background: var(--color-white);
+            background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
             border: 2px solid var(--color-light-gray);
             border-radius: var(--radius-md);
             padding: var(--space-xl);
             margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .profile-summary h4 {
+            color: var(--color-dark);
+            margin-bottom: var(--space-lg);
+            font-size: var(--font-md);
+            font-weight: 700;
+            text-align: center;
+            padding-bottom: var(--space-md);
+            border-bottom: 2px solid var(--color-light-gray);
+        }
+
+        .profile-item {
+            display: grid;
+            grid-template-columns: 130px 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            padding: var(--space-md);
+            font-size: var(--font-sm);
+            color: #4a5568;
+            align-items: center;
+            background: white;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--color-primary);
+            transition: all var(--transition-base);
+        }
+
+        .profile-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .profile-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .profile-item strong {
+            color: var(--color-primary);
+            font-weight: 700;
+            font-size: var(--font-sm);
+        }
+
+        /* Timeline com design moderno */
+        .timeline {
+            background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
+            border: 2px solid var(--color-light-gray);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-sm);
         }
 
         .timeline h4 {
             color: var(--color-dark);
-            margin-bottom: var(--space-lg);
-            font-size: var(--font-base);
+            margin-bottom: var(--space-xl);
+            font-size: var(--font-md);
+            font-weight: 700;
+            text-align: center;
+            padding-bottom: var(--space-md);
+            border-bottom: 2px solid var(--color-light-gray);
         }
 
         .timeline-item {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            align-items: start;
+            padding: var(--space-md);
+            background: white;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-base);
+            position: relative;
+        }
+
+        .timeline-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '✓';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: var(--color-primary);
+            color: white;
+            border-radius: 50%;
             display: flex;
-            gap: var(--space-md);
-            margin-bottom: var(--space-md);
-            align-items: flex-start;
-            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
         }
 
         .timeline-week {
-            min-width: clamp(80px, 20vw, 90px);
-            font-weight: 600;
-            color: var(--color-primary);
+            min-width: 100px;
+            padding: var(--space-sm) var(--space-md);
+            background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
+            color: white;
+            font-weight: 700;
             font-size: var(--font-sm);
+            border-radius: var(--radius-sm);
+            text-align: center;
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
 
         .timeline-desc {
             flex: 1;
-            min-width: 200px;
-            color: #4a5568;
+            color: #2d3748;
             font-size: var(--font-sm);
-            line-height: 1.4;
+            line-height: 1.6;
+            font-weight: 500;
         }
 
         /* Price */
@@ -636,49 +708,73 @@
             display: inline-block;
             background: linear-gradient(135deg, var(--color-success) 0%, #38a169 100%);
             color: var(--color-white);
-            padding: var(--space-md) var(--space-xl);
+            padding: var(--space-lg) var(--space-xl);
             border-radius: var(--radius-md);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: var(--font-md);
             margin-top: var(--space-lg);
             transition: all var(--transition-base);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         .cta-button::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(255,255,255,0.2);
-            transform: translateX(-100%);
-            transition: transform var(--transition-base);
+            background: rgba(255,255,255,0.15);
+            transform: translateX(-100%) skewX(-15deg);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .cta-button:hover::before {
-            transform: translateX(0);
+            transform: translateX(100%) skewX(-15deg);
+        }
+
+        .cta-button::after {
+            content: '→';
+            position: absolute;
+            right: var(--space-lg);
+            top: 50%;
+            transform: translateY(-50%) translateX(0);
+            transition: transform var(--transition-base);
+            font-size: var(--font-lg);
         }
 
         .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(72, 187, 120, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(72, 187, 120, 0.5);
         }
 
-        /* Social Contact */
+        .cta-button:hover::after {
+            transform: translateY(-50%) translateX(5px);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px) scale(1);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+        }
+
+        /* Social Contact com visual moderno */
         .social-contact {
-            background: var(--color-white);
+            background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
             border: 2px solid var(--color-light-gray);
             border-radius: var(--radius-md);
-            padding: var(--space-lg);
+            padding: var(--space-xl);
             margin: var(--space-xl) 0;
             text-align: center;
+            box-shadow: var(--shadow-sm);
         }
 
         .social-contact h4 {
             color: var(--color-dark);
-            margin-bottom: var(--space-md);
-            font-size: var(--font-base);
+            margin-bottom: var(--space-lg);
+            font-size: var(--font-md);
+            font-weight: 700;
         }
 
         .social-links {
@@ -691,9 +787,10 @@
         .social-link {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: var(--space-sm);
-            padding: var(--space-sm) var(--space-md);
-            background: var(--color-bg);
+            padding: var(--space-md) var(--space-lg);
+            background: white;
             border: 2px solid var(--color-light-gray);
             border-radius: var(--radius-sm);
             text-decoration: none;
@@ -701,37 +798,87 @@
             font-weight: 600;
             font-size: var(--font-sm);
             transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity var(--transition-base);
+            z-index: 0;
+        }
+
+        .social-link span {
+            position: relative;
+            z-index: 1;
         }
 
         .social-link:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .social-link:hover::before {
+            opacity: 1;
+        }
+
+        .social-link:active {
+            transform: translateY(-1px) scale(1.02);
         }
 
         .social-link.linkedin {
             border-color: #0077b5;
-            color: #0077b5;
+        }
+
+        .social-link.linkedin::before {
+            background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
         }
 
         .social-link.linkedin:hover {
-            background: #e6f3f9;
+            color: white;
+            border-color: #0077b5;
         }
 
         .social-link.instagram {
             border-color: #E1306C;
-            color: #E1306C;
+        }
+
+        .social-link.instagram::before {
+            background: linear-gradient(135deg, #833AB4 0%, #E1306C 50%, #FD1D1D 100%);
         }
 
         .social-link.instagram:hover {
-            background: #fce8f0;
+            color: white;
+            border-color: #E1306C;
         }
 
         .social-link.youtube {
             border-color: #FF0000;
-            color: #FF0000;
+        }
+
+        .social-link.youtube::before {
+            background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
         }
 
         .social-link.youtube:hover {
-            background: #ffe6e6;
+            color: white;
+            border-color: #FF0000;
+        }
+
+        .social-link.substack {
+            border-color: #FF6719;
+        }
+
+        .social-link.substack::before {
+            background: linear-gradient(135deg, #FF6719 0%, #E65100 100%);
+        }
+
+        .social-link.substack:hover {
+            color: white;
+            border-color: #FF6719;
         }
 
         .note {
@@ -803,7 +950,21 @@
         @container quiz-container (max-width: 500px) {
             .profile-item {
                 grid-template-columns: 1fr;
-                gap: calc(var(--space-xs) / 2);
+                gap: var(--space-xs);
+                border-left-width: 2px;
+            }
+
+            .profile-item strong {
+                font-size: var(--font-xs);
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .timeline-week {
+                justify-self: start;
             }
         }
 
@@ -1890,7 +2051,7 @@
                 target: '_blank',
                 rel: 'noopener noreferrer'
             });
-            linkedinLink.innerHTML = '🔗 LinkedIn';
+            linkedinLink.innerHTML = '<span>🔗 LinkedIn</span>';
             linkedinLink.setAttribute('aria-label', 'Perfil do LinkedIn de Vinicius Figueiredo');
             
             // Instagram
@@ -1900,7 +2061,7 @@
                 target: '_blank',
                 rel: 'noopener noreferrer'
             });
-            instagramLink.innerHTML = '📸 Instagram';
+            instagramLink.innerHTML = '<span>📷 Instagram</span>';
             instagramLink.setAttribute('aria-label', 'Perfil do Instagram de Vinicius Figueiredo');
             
             // YouTube
@@ -1910,12 +2071,23 @@
                 target: '_blank',
                 rel: 'noopener noreferrer'
             });
-            youtubeLink.innerHTML = '▶️ YouTube';
+            youtubeLink.innerHTML = '<span>🎥 YouTube</span>';
             youtubeLink.setAttribute('aria-label', 'Canal do YouTube de Vinicius Figueiredo');
+            
+            // Substack
+            const substackLink = createSafeElement('a', { 
+                href: 'https://viniciusfigueiredo.substack.com/',
+                class: 'social-link substack',
+                target: '_blank',
+                rel: 'noopener noreferrer'
+            });
+            substackLink.innerHTML = '<span>📬 Substack</span>';
+            substackLink.setAttribute('aria-label', 'Newsletter do Substack de Vinicius Figueiredo');
             
             socialLinks.appendChild(linkedinLink);
             socialLinks.appendChild(instagramLink);
             socialLinks.appendChild(youtubeLink);
+            socialLinks.appendChild(substackLink);
             socialContact.appendChild(socialLinks);
 
             const note = createSafeElement('p', { class: 'note' });
