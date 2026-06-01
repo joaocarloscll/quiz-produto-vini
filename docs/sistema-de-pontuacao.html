@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Como funciona o sistema de pontuação — Quiz VF</title>
+<style>
+    @page { size: A4; margin: 18mm 16mm; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+        --navy: #0f1b34;
+        --blue: #2563eb;
+        --blue-soft: #eaf1ff;
+        --green: #059669;
+        --amber: #b45309;
+        --purple: #7c3aed;
+        --ink: #1e293b;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --bg-soft: #f8fafc;
+    }
+    body {
+        font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        color: var(--ink);
+        line-height: 1.55;
+        font-size: 10.5pt;
+    }
+    h1, h2, h3 { color: var(--navy); line-height: 1.25; }
+    h2 {
+        font-size: 16pt;
+        margin: 26px 0 10px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid var(--blue);
+    }
+    h3 { font-size: 12pt; margin: 16px 0 6px; }
+    p { margin: 6px 0; }
+    strong { color: var(--navy); }
+    .muted { color: var(--muted); }
+    ul, ol { margin: 6px 0 6px 20px; }
+    li { margin: 3px 0; }
+    code {
+        background: var(--bg-soft);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-family: 'SF Mono', Consolas, monospace;
+        font-size: 9.5pt;
+        color: var(--navy);
+    }
+
+    /* Capa */
+    .cover {
+        text-align: center;
+        padding: 60px 0 30px;
+        border-bottom: 3px solid var(--blue);
+        margin-bottom: 10px;
+    }
+    .cover .kicker {
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-size: 9pt;
+        font-weight: 700;
+        color: var(--blue);
+    }
+    .cover h1 { font-size: 26pt; margin: 14px 0 8px; }
+    .cover .sub { font-size: 12pt; color: var(--muted); }
+    .cover .meta { font-size: 9.5pt; color: var(--muted); margin-top: 22px; }
+
+    .lead {
+        background: var(--blue-soft);
+        border-left: 4px solid var(--blue);
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin: 14px 0;
+    }
+    .note {
+        background: #fff7ed;
+        border-left: 4px solid var(--amber);
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin: 14px 0;
+    }
+    .ok {
+        background: #ecfdf5;
+        border-left: 4px solid var(--green);
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin: 14px 0;
+    }
+
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 10pt; }
+    th, td { border: 1px solid var(--line); padding: 7px 9px; text-align: left; vertical-align: top; }
+    th { background: var(--navy); color: #fff; font-weight: 600; }
+    tr:nth-child(even) td { background: var(--bg-soft); }
+    .center { text-align: center; }
+
+    .pill { display: inline-block; border-radius: 999px; padding: 2px 9px; font-size: 8.5pt; font-weight: 700; color: #fff; }
+    .pill.ppci { background: var(--blue); }
+    .pill.avcb { background: var(--green); }
+    .pill.esc { background: var(--amber); }
+    .pill.ment { background: var(--purple); }
+
+    .cards { display: flex; gap: 12px; margin: 12px 0; }
+    .card { flex: 1; border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: #fff; }
+    .card h3 { margin-top: 0; }
+    .card .big { font-size: 22pt; font-weight: 800; color: var(--blue); }
+
+    .steps { counter-reset: step; margin: 12px 0; }
+    .step { position: relative; padding: 4px 0 12px 42px; }
+    .step::before {
+        counter-increment: step;
+        content: counter(step);
+        position: absolute; left: 0; top: 0;
+        width: 28px; height: 28px;
+        background: var(--blue); color: #fff;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 12pt;
+    }
+    .step:not(:last-child)::after {
+        content: ''; position: absolute; left: 13px; top: 30px; bottom: 2px;
+        width: 2px; background: var(--line);
+    }
+
+    .formula {
+        background: var(--navy); color: #e2e8f0;
+        border-radius: 8px; padding: 14px 16px; margin: 12px 0;
+        font-family: 'SF Mono', Consolas, monospace; font-size: 10pt;
+        text-align: center;
+    }
+    .formula b { color: #7dd3fc; }
+
+    .page-break { page-break-before: always; }
+    .footer-note { margin-top: 26px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 8.5pt; color: var(--muted); text-align: center; }
+
+    .barrow { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 9.5pt; }
+    .barrow .lbl { width: 78px; font-weight: 600; }
+    .barrow .track { flex: 1; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 4px; height: 16px; overflow: hidden; }
+    .barrow .fill { height: 100%; }
+    .barrow .val { width: 42px; text-align: right; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+    <div class="kicker">Vinicius Figueiredo · Engenharia</div>
+    <h1>Como funciona a pontuação do Quiz</h1>
+    <div class="sub">O sistema que recomenda o produto certo para cada visitante</div>
+    <div class="meta">Documento técnico-explicativo · versão 2.0</div>
+</div>
+
+<div class="lead">
+    <strong>Em uma frase:</strong> cada resposta do visitante distribui pontos entre os seus 4 produtos.
+    No final, o produto com mais pontos é o recomendado, o 2º vira "próximo passo", e a diferença
+    entre eles vira a <strong>% de compatibilidade</strong>. Este documento explica exatamente como isso é calculado
+    e o que foi ajustado nesta nova versão.
+</div>
+
+<h2>1. O problema que o quiz resolve</h2>
+<p>
+    Seus 4 produtos têm fronteiras que se sobrepõem — uma pessoa em dúvida pode "parecer" que serve
+    para dois ou três deles. Se o quiz erra o direcionamento, ele manda a pessoa para o produto errado
+    e você perde a venda. Por isso a pontuação precisa ser <strong>precisa e à prova de viés</strong>: não pode
+    "puxar" sistematicamente para um produto só.
+</p>
+
+<div class="cards">
+    <div class="card"><h3><span class="pill ppci">PPCI</span></h3><p class="muted">PPCI do Zero ao Aprovado</p><p>R$ 649,90</p></div>
+    <div class="card"><h3><span class="pill avcb">AVCB</span></h3><p class="muted">Guia AVCB, CLCB e Laudos</p><p>R$ 449,90</p></div>
+    <div class="card"><h3><span class="pill esc">ESCRITÓRIO</span></h3><p class="muted">Escritório de Projetos Lucrativo</p><p>R$ 549,90</p></div>
+    <div class="card"><h3><span class="pill ment">MENTORIA</span></h3><p class="muted">Mentoria Individual</p><p>a partir de R$ 1.200</p></div>
+</div>
+
+<h2>2. Visão geral em 4 passos</h2>
+<div class="steps">
+    <div class="step"><strong>Coleta.</strong> O visitante responde 13 perguntas (algumas de escolha única, outras de múltipla escolha com limite).</div>
+    <div class="step"><strong>Soma.</strong> Cada opção marcada adiciona pontos a um ou mais produtos. Os pontos vão se acumulando em 4 "placares".</div>
+    <div class="step"><strong>Ranking.</strong> Ordena os 4 produtos do mais pontuado para o menos. O 1º é o recomendado; o 2º é o complementar.</div>
+    <div class="step"><strong>Confiança.</strong> A distância entre o 1º e o 2º vira a % de compatibilidade — quanto mais "isolado" o líder, maior a confiança.</div>
+</div>
+
+<h2>3. O segredo: dois tipos de pergunta</h2>
+<p>Nem toda pergunta tem o mesmo papel. Elas se dividem em dois grupos:</p>
+
+<table>
+    <tr><th style="width:130px">Tipo</th><th>O que mede</th><th>Peso no resultado</th></tr>
+    <tr>
+        <td><strong>INTENÇÃO</strong><br><span class="muted">(5 perguntas)</span></td>
+        <td>O que a pessoa <strong>fundamentalmente quer</strong> — os serviços que deseja oferecer, suas dores, o que precisa agora, como prefere aprender.</td>
+        <td>Alto. Além de pontuar, servem de <strong>critério de desempate</strong> quando o resultado fica apertado.</td>
+    </tr>
+    <tr>
+        <td><strong>PERFIL</strong><br><span class="muted">(8 perguntas)</span></td>
+        <td>Quem a pessoa é e seu contexto — momento de carreira, nível técnico, tempo, orçamento, meta de faturamento.</td>
+        <td>Moderado. <strong>Modulam</strong> o resultado, mas não decidem sozinhas.</td>
+    </tr>
+</table>
+
+<p>
+    Essa separação é o que garante a precisão: a <strong>intenção</strong> manda mais que o <strong>perfil</strong>. Alguém pode ter pouco
+    tempo e pouco dinheiro (perfil), mas se sinaliza claramente que quer dominar projetos técnicos de incêndio (intenção),
+    o sistema entende o que importa.
+</p>
+
+<div class="note">
+    <strong>Por que isso é importante:</strong> sem essa hierarquia, as perguntas de perfil (que tocam quase todo mundo)
+    acabariam "empurrando" todos para os mesmos 1 ou 2 produtos. A intenção mantém o leme.
+</div>
+
+<div class="page-break"></div>
+
+<h2>4. Como os pontos somam (exemplo simples)</h2>
+<p>
+    Imagine a pergunta <em>"Quais serviços você quer oferecer?"</em> (múltipla escolha). Cada opção tem um "envelope" de pontos:
+</p>
+<table>
+    <tr><th>Opção marcada</th><th class="center"><span class="pill ppci">PPCI</span></th><th class="center"><span class="pill avcb">AVCB</span></th><th class="center"><span class="pill esc">ESC</span></th><th class="center"><span class="pill ment">MENT</span></th></tr>
+    <tr><td>Projetos de PPCI (hidrantes, detecção e alarme)</td><td class="center">+3</td><td class="center">—</td><td class="center">—</td><td class="center">—</td></tr>
+    <tr><td>AVCB / CLCB e regularizações</td><td class="center">—</td><td class="center">+3</td><td class="center">—</td><td class="center">—</td></tr>
+    <tr><td>Construção de casas para venda (incorporação)</td><td class="center">—</td><td class="center">—</td><td class="center">+1</td><td class="center">+3</td></tr>
+</table>
+<p>
+    Se a pessoa marca <strong>PPCI</strong> e <strong>AVCB</strong>, ela soma <code>+3 PPCI</code> e <code>+3 AVCB</code> só nessa pergunta.
+    Em escolha única, conta o envelope da única opção marcada; em múltipla, somam-se todos os marcados (respeitando o limite, ex.: "até 2").
+    Esse processo se repete nas 13 perguntas e vai formando os 4 placares.
+</p>
+
+<h2>5. Como o vencedor é escolhido (com desempate)</h2>
+<p>Ao final, os 4 produtos são ordenados por uma sequência de critérios — cada um só é usado se o anterior empatar:</p>
+<div class="steps">
+    <div class="step"><strong>Pontuação total.</strong> Maior soma vence. (Decide a grande maioria dos casos.)</div>
+    <div class="step"><strong>Pontuação de intenção.</strong> Se dois empatam no total, vence quem tem mais pontos vindos das perguntas de <strong>intenção</strong> — ou seja, o que a pessoa realmente quer.</div>
+    <div class="step"><strong>Prioridade fixa.</strong> Em um empate raríssimo nos dois anteriores, usa-se uma ordem fixa que favorece o produto mais específico: <span class="pill ment">Mentoria</span> &gt; <span class="pill ppci">PPCI</span> &gt; <span class="pill avcb">AVCB</span> &gt; <span class="pill esc">Escritório</span>.</div>
+</div>
+
+<h2>6. A % de compatibilidade</h2>
+<p>
+    Não basta dizer "é esse produto"; o quiz mostra <strong>o quão confiante</strong> ele está. A ideia: quanto mais o líder
+    se distancia do 2º colocado, maior a compatibilidade.
+</p>
+<div class="formula">
+    folga = (pontos do 1º − pontos do 2º) ÷ pontos do 1º<br>
+    <b>compatibilidade = 72% + folga × 26%</b> &nbsp;(limitada entre 72% e 98%)
+</div>
+<p>
+    Um líder bem destacado chega a 85–95%. Um resultado equilibrado fica perto de 72–78% — e nesse caso o
+    <strong>produto complementar</strong> ganha importância, porque a pessoa realmente está entre dois caminhos.
+    O piso de 72% é proposital: evita transmitir insegurança ("42% compatível" passa impressão ruim).
+</p>
+
+<h3>O 2º produto (próximo passo)</h3>
+<p>
+    O 2º colocado aparece como "combina bem com" e também ganha uma % — sempre <strong>menor e mais discreta</strong> que a do
+    principal, calculada proporcionalmente à força relativa dele. É a sua oportunidade de cross-sell sem competir
+    com a recomendação principal.
+</p>
+
+<div class="page-break"></div>
+
+<h2>7. O que foi ajustado nesta versão (rebalanceamento)</h2>
+<p>
+    Na revisão, rodei uma análise estatística: simulei <strong>mais de 150 mil respostas aleatórias</strong> para medir se algum
+    produto estava sendo favorecido sem motivo. O diagnóstico confirmou um viés:
+</p>
+
+<h3>Antes — distribuição desequilibrada</h3>
+<div class="barrow"><span class="lbl"><span class="pill ppci">PPCI</span></span><span class="track"><span class="fill" style="width:14%;background:#2563eb"></span></span><span class="val">14%</span></div>
+<div class="barrow"><span class="lbl"><span class="pill avcb">AVCB</span></span><span class="track"><span class="fill" style="width:38%;background:#059669"></span></span><span class="val">38%</span></div>
+<div class="barrow"><span class="lbl"><span class="pill esc">ESC.</span></span><span class="track"><span class="fill" style="width:35%;background:#b45309"></span></span><span class="val">35%</span></div>
+<div class="barrow"><span class="lbl"><span class="pill ment">MENT.</span></span><span class="track"><span class="fill" style="width:12%;background:#7c3aed"></span></span><span class="val">12%</span></div>
+
+<p class="muted" style="margin-top:8px">
+    AVCB e Escritório dominavam (juntos ~73%), enquanto PPCI e Mentoria quase não apareciam. Motivo: as perguntas de
+    perfil davam pontos "passivos" a AVCB e Escritório em quase toda resposta, criando um piso alto e constante para eles.
+</p>
+
+<h3>Depois — equilibrado e justo</h3>
+<div class="barrow"><span class="lbl"><span class="pill ppci">PPCI</span></span><span class="track"><span class="fill" style="width:27%;background:#2563eb"></span></span><span class="val">27%</span></div>
+<div class="barrow"><span class="lbl"><span class="pill avcb">AVCB</span></span><span class="track"><span class="fill" style="width:27%;background:#059669"></span></span><span class="val">27%</span></div>
+<div class="barrow"><span class="lbl"><span class="pill esc">ESC.</span></span><span class="track"><span class="fill" style="width:27%;background:#b45309"></span></span><span class="val">27%</span></div>
+<div class="barrow"><span class="lbl"><span class="pill ment">MENT.</span></span><span class="track"><span class="fill" style="width:19%;background:#7c3aed"></span></span><span class="val">19%</span></div>
+
+<div class="ok">
+    <strong>Alvo atingido:</strong> PPCI, AVCB e Escritório com chances praticamente iguais (~27% cada) e a Mentoria
+    naturalmente mais afunilada (~19%), por ser o produto premium e mais específico. Nenhum produto "ganha de graça".
+</div>
+
+<h3>Como o ajuste foi feito (sem chutar)</h3>
+<ul>
+    <li><strong>Não mexi nas perguntas nem nos textos</strong> — só nos <strong>pesos</strong> de cada opção.</li>
+    <li>Usei um algoritmo de otimização que testou milhares de combinações de pesos, mantendo cada opção fiel ao seu tema (pergunta sobre nível de PPCI continua puxando PPCI, etc.).</li>
+    <li>Cada ajuste foi validado contra <strong>7 perfis-modelo reais</strong> (um iniciante de PPCI, um CLT querendo renda extra com AVCB, um dono de escritório, uma pessoa perdida que precisa de mentoria, etc.).</li>
+</ul>
+
+<h2>8. Validação: os 7 perfis-modelo</h2>
+<p>Depois do rebalanceamento, todos os 7 perfis continuam sendo direcionados para o produto certo, com alta compatibilidade:</p>
+<table>
+    <tr><th>Perfil simulado</th><th>Produto recomendado</th><th class="center">Compatib.</th></tr>
+    <tr><td>Iniciante quer aprender PPCI (técnico)</td><td><span class="pill ppci">PPCI</span></td><td class="center">87%</td></tr>
+    <tr><td>CLT sem tempo, quer renda extra rápida</td><td><span class="pill avcb">AVCB</span></td><td class="center">90%</td></tr>
+    <tr><td>Dono de escritório, faturamento instável</td><td><span class="pill esc">Escritório</span></td><td class="center">85%</td></tr>
+    <tr><td>Em transição de carreira, perdido, quer direção</td><td><span class="pill ment">Mentoria</span></td><td class="center">93%</td></tr>
+    <tr><td>Quer processo dos bombeiros + laudos</td><td><span class="pill avcb">AVCB</span></td><td class="center">85%</td></tr>
+    <tr><td>Quer captar clientes e precificar</td><td><span class="pill esc">Escritório</span></td><td class="center">82%</td></tr>
+    <tr><td>Estudante quer aprender do zero</td><td><span class="pill ppci">PPCI</span></td><td class="center">87%</td></tr>
+</table>
+<p class="center muted"><strong>7 de 7 corretos.</strong></p>
+
+<h2>9. Em resumo</h2>
+<div class="lead">
+    <ul style="margin-left:16px">
+        <li>Cada resposta distribui pontos entre os 4 produtos.</li>
+        <li>As perguntas de <strong>intenção</strong> pesam mais e desempatam.</li>
+        <li>O líder vira recomendação; o 2º vira próximo passo (cross-sell).</li>
+        <li>A distância entre eles vira a <strong>% de compatibilidade</strong>.</li>
+        <li>Os pesos foram <strong>rebalanceados</strong> para que PPCI, AVCB e Escritório tenham chances iguais e a Mentoria fique levemente afunilada — sem viés, e validado em mais de 150 mil simulações.</li>
+    </ul>
+</div>
+
+<div class="footer-note">
+    Quiz de Recomendação · Vinicius Figueiredo Engenharia · Desenvolvido por João Carlos Chaves · v2.0
+</div>
+
+</body>
+</html>
