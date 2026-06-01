@@ -27,11 +27,12 @@
     <meta name="twitter:image" content="https://joaocarloscll.github.io/quiz-produto-vini/twitter-image.png">
 
     <!-- Security -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; img-src 'self' data: https:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; img-src 'self' data: https:; base-uri 'self'; form-action 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <!-- Proteção contra clickjacking (frame-ancestors / X-Frame-Options) só vale
+         como HEADER HTTP, não em <meta>. Se quiser ativá-la, configure no host:
+         "X-Frame-Options: DENY" ou "Content-Security-Policy: frame-ancestors 'none'". -->
 
     <!-- PWA -->
     <meta name="theme-color" content="#0a0f1e">
@@ -812,9 +813,9 @@
         .social-link {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: var(--space-sm);
-            padding: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
             min-height: 48px;
             background: var(--color-bg-card);
             border: 1px solid var(--color-border);
@@ -823,6 +824,7 @@
             color: var(--color-text);
             font-weight: 600;
             font-size: var(--font-sm);
+            line-height: 1;
             transition: transform var(--transition-base), border-color var(--transition-base);
         }
 
@@ -831,6 +833,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 20px;
+            height: 20px;
             flex-shrink: 0;
         }
 
